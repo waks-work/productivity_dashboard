@@ -1,0 +1,181 @@
+import React, { useEffect, useState } from 'react';
+import './TaskNavBar.css';
+import { debounce } from 'lodash';
+import { Search } from '@mui/icons-material';
+import { checkAuth } from '../../services/authService';
+import { get_task } from '../../services/taskService';
+
+const TaskNavBar = ({ onSearch, onCategoryChange, onFilterChange }) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [date, setDate] = useState(new Date());
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [filterOptions] = useState(['all', 'today', 'week', 'important']);
+
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            try {
+                const isAuth = await checkAuth();
+                if (!isAuth) {
+                    throw new Error('Not Authenticated');
+                }
+
+                const taskResponse = await get_task();
+                if (!Array.isArray(taskResponse)) {
+                    throw new Error('Invalid Task Data');
+                }
+
+                if (onSearch) onSearch('', taskResponse);
+
+                const uniqueCategories = [...new Set(
+                    taskResponse.map(task => task.category)
+                )];
+                setCategories(['all', ...uniqueCategories]);
+
+            } catch (error) {
+                console.error('Error:', error);
+                // window.location.href = '/login';
+            }
+        };
+
+        fetchInitialData();
+
+        const interval = setInterval(() => {
+            setDate(new Date());
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [onSearch]);
+
+    const debouncedSearch = debounce(async (searchTerm) => {
+        try {
+            const filteredTasks = await get_task();
+            const results = filteredTasks.filter(task =>
+                task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                task.description.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            if (onSearch) onSearch(searchTerm, results);
+        } catch (error) {
+            console.error('Search error:', error);
+        }
+    }, 300);
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchInput(value);
+        debouncedSearch(value);
+    };
+
+    const handleCategoryChange = async (category) => {
+        setSelectedCategory(category);
+        try {
+            const allTasks = await get_task();
+            const filtered = category === 'all'
+                ? allTasks
+                : allTasks.filter(task => task.category === category);
+
+            if (onCategoryChange) onCategoryChange(category, filtered);
+        } catch (error) {
+            console.error('Category filter error:', error);
+        }
+    };
+
+    const handleFilterChange = async (filter) => {
+        try {
+            const allTasks = await get_task();
+            let filtered = [];
+
+            switch(filter) {
+                case 'today':
+                    filtered = allTasks.filter(task =>
+                        new Date(task.due_date).toDateString() === new Date().toDateString()
+                    );
+                    break;
+                case 'week':
+                    const nextWeek = new Date();
+                    nextWeek.setDate(nextWeek.getDate() + 7);
+                    filtered = allTasks.filter(task =>
+                        new Date(task.due_date) <= nextWeek
+                    );
+                    break;
+                case 'important':
+                    filtered = allTasks.filter(task => task.is_important);
+                    break;
+                default:
+                    filtered = allTasks;
+            }
+
+            if (onFilterChange) onFilterChange(filter, filtered);
+        } catch (error) {
+            console.error('Error Filtering Data:', error);
+        }
+    };
+
+    return (
+        <div className='nav'>
+            <div className="nav-wrapper">
+                <div className="nav-left">
+                    <div className="nav-date">
+                        {date.toLocaleString('en-GB', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                    </div>
+                </div>
+
+                <div className="nav-center">
+                    <div className="nav-inp">
+                        <div className="nav-icon">
+                            <Search />
+                        </div>
+                        <div className="nav-search">
+                            <input
+                                type="text"
+                                value={searchInput}
+                                placeholder='Search for activity...'
+                                onChange={handleSearchChange}
+                                className="nav-input"
+                                aria-label="Search activities"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="nav-right">
+                    <div className="nav-category-dropdown">
+                        <select
+                            value={selectedCategory}
+                            onChange={(e) => handleCategoryChange(e.target.value)}
+                            className="nav-dropdown"
+                        >
+                            {categories.map(category => (
+                                <option key={category} value={category}>
+                                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="nav-filter-dropdown">
+                        <select
+                            onChange={(e) => handleFilterChange(e.target.value)}
+                            defaultValue="all"
+                            className="nav-dropdown"
+                        >
+                            {filterOptions.map(option => (
+                                <option key={option} value={option}>
+                                    {option.charAt(0).toUpperCase() + option.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default TaskNavBar;

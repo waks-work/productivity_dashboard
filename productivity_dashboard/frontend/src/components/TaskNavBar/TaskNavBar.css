@@ -1,0 +1,161 @@
+.nav {
+    background-color: white;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 12px 20px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.nav-center {
+    flex-grow: 1;
+    max-width: 600px;
+    margin: 0 20px;
+}
+
+.nav-date {
+    font-size: 0.9rem;
+    white-space: nowrap;
+    color: #555;
+}
+
+.nav-inp {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 5px 15px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.nav-inp:hover {
+    background-color: #eee;
+}
+
+.nav-icon {
+    display: flex;
+    color: #666;
+    margin-right: 8px;
+}
+
+.nav-search {
+    flex-grow: 1;
+}
+
+.nav-input {
+    border: none;
+    background: transparent;
+    padding: 8px 0;
+    width: 100%;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.nav-right {
+    gap: 15px;
+}
+
+.nav-category, .nav-filter {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nav-category:hover, .nav-filter:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-text {
+    font-weight: 400;
+    color: #444;
+}
+
+@media (max-width: 768px) {
+    .nav-wrapper {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-left, .nav-center, .nav-right {
+        width: 100%;
+    }
+
+    .nav-date {
+        text-align: center;
+    }
+
+    .nav-right {
+        justify-content: center;
+    }
+}
+
+/* Add these to your existing TaskNavBar.css */
+
+.nav-dropdown {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.nav-dropdown:hover {
+    border-color: #aaa;
+}
+
+.nav-category-dropdown, .nav-filter-dropdown {
+    position: relative;
+}
+
+.nav-category-dropdown::after, .nav-filter-dropdown::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.7rem;
+    color: #666;
+}
+
+/* Responsive adjustments for dropdowns */
+@media (max-width: 768px) {
+    .nav-right {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .nav-category-dropdown, .nav-filter-dropdown {
+        width: 100%;
+    }
+    
+    .nav-dropdown {
+        width: 100%;
+    }
+}

@@ -1,0 +1,5 @@
+setup.py
+productivity_dashboard.egg-info/PKG-INFO
+productivity_dashboard.egg-info/SOURCES.txt
+productivity_dashboard.egg-info/dependency_links.txt
+productivity_dashboard.egg-info/top_level.txt
