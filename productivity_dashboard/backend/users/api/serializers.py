@@ -19,33 +19,41 @@ class UserActivitySerializer(serializers.ModelSerializer):
         fields = ['last_login', 'ip_address']
         read_only_fields = fields
 
-class LoginSerializer(serializers.ModelSerializer):
+class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, data):
         user = authenticate(email = data['email'], password=data['password'])
         if not user:
             raise serializers.ValidationError("Invalid credentials")
+        data['user'] = user
         return user
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required = True)
     class Meta:
         model = User
-        fields = ['email', 'timezone', 'profile_pic']
-        extra_kwargs ={'password': {'write_only': True}}
+        fields = [ 'email', 'password', 'timezone', 'profile_pic']
+        extra_kwargs ={
+            'password': {'write_only': True}
+        }
 
     def create(self, validate_data):
-        return User.objects.create_user(**validate_data)
+        return User.objects.create_user(
+            email = validate_data['email'],
+            password = validate_data.pop('password')
+            **validate_data
+        )
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = [
-            'id', 'stripe_id', 'is_default','added_at'
+            'id', 'phone_number', 'mpesa_reciept', 'is_default','added_at'
         ]
-        read_only_fields = ['id', 'added_at']
+        read_only_fields = ['id', 'added_at', 'mpesa_reciept']
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:

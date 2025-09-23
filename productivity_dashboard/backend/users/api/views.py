@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
@@ -7,7 +8,7 @@ from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from django.http import JsonResponse
 from django.conf import settings
-import stripe
+import requests
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -17,8 +18,8 @@ from .serializers import (
     SubscriptionUpdateSerializer
 )
 from ..models import PaymentMethod, Subscription, User
-
-stripe.api_key = settings.STRIPE_SECRET_KEY
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 
 class PaymentMethodViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentMethodSerializer
@@ -44,24 +45,46 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
         try:
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[{
-                    'price': settings.STRIPE_PREMIUM_PRICE_ID,
-                    'quantity': 1,
-                }],
-                mode='subscription',
-                success_url=settings.FRONTEND_URL + '/subscribe/success/',
-                cancel_url=settings.FRONTEND_URL + '/subscribe/cancel/',
-                customer_email=request.user.email,
-            )
-            return Response({'session_id': checkout_session.id})
+            phone_number = request.data.get("phone_number")
+            amount = settings.MPESA_SUBSCRIPTION_AMOUNT
+
+            # 1. Get OAuth token
+            auth_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+            r = requests.get(auth_url, auth=(settings.MPESA_CONSUMER_KEY, settings.MPESA_CONSUMER_SECRET))
+            access_token = r.json()["access_token"]
+
+            # 2. STK Push request
+            stk_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+            headers = {"Authorization": f"Bearer {access_token}"}
+
+            payload = {
+                "BusinessShortCode": settings.MPESA_SHORTCODE,
+                "Password": settings.MPESA_PASSWORD,
+                "Timestamp": timezone.now().strftime("%Y%m%d%H%M%S"),
+                "TransactionType": "CustomerPayBillOnline",
+                "Amount": amount,
+                "PartyA": phone_number,
+                "PartyB": settings.MPESA_SHORTCODE,
+                "PhoneNumber": phone_number,
+                "CallBackURL": settings.MPESA_CALLBACK_URL,
+                "AccountReference": f"SUB-{request.user.id}",
+                "TransactionDesc": "Premium subscription",
+            }
+
+            res = requests.post(stk_url, json=payload, headers=headers)
+            return Response(res.json())
+
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_update(self, serializer):
         instance = self.get_object()
         serializer.save()
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def mpesa_callback(requests):
+    return Response({'status': 'ok'})
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer

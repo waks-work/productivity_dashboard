@@ -108,7 +108,8 @@ class UserActivity(models.Model):
 
 class PaymentMethod(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE)
-    stripe_id =models.CharField(max_length=100)
+    phone_number = models.CharField(max_length = 15, help_text="M-Pesa registered phone number e.g. 2547XXXXXXXX")
+    mpesa_reciept = models.CharField(max_length = 100, blank = True, null = True, help_text = "Mpesa Transaction ID (filled after payment)" )
     is_default = models.BooleanField(default = False)
     added_at = models.DateTimeField(auto_now_add = True)
 
