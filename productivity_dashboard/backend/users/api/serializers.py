@@ -40,12 +40,15 @@ class RegisterSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-    def create(self, validate_data):
-        return User.objects.create_user(
-            email = validate_data['email'],
-            password = validate_data.pop('password')
-            **validate_data
-        )
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        user = User.objects.create_user(**validated_data)
+
+        if password:
+            user.set_password(password)
+            user.save()
+
+        return user
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:

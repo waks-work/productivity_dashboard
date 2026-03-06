@@ -51,11 +51,14 @@ export default class ApiRoute {
   }
 
   static async register(email: string, password: string) {
-    return this.authRequest<AuthResponse>("register", { email, password });
+    return await this.authRequest<AuthResponse>("register", {
+      email,
+      password,
+    });
   }
 
   static async login(email: string, password: string) {
-    return this.authRequest<AuthResponse>("login", { email, password });
+    return await this.authRequest<AuthResponse>("login", { email, password });
   }
   static async refreshToken() {
     const refresh = localStorage.getItem("refresh");
@@ -124,10 +127,8 @@ export default class ApiRoute {
   // =============================
 
   async routing<T>(data?: any): Promise<AxiosResponse<T>> {
-    const url = `${BASE_URL}/${this.mainRoute}/${this.routes}`.replace(
-      /\/+/g,
-      "/",
-    );
+    const rawUrl = `${BASE_URL}/${this.mainRoute}/${this.routes}`;
+    const url = rawUrl.replace(/([^:]\/)\/+/g, "$1");
 
     const headers: { [key: string]: string } = {
       "Content-Type": "application/json",
@@ -146,6 +147,6 @@ export default class ApiRoute {
       withCredentials: true,
     };
 
-    return this.handlingErrors<T>(config);
+    return await this.handlingErrors<T>(config);
   }
 }

@@ -1,0 +1,10 @@
+#!/bin/bash
+echo "🔍 Running pre-commit checks..."
+
+# Python formatting
+[ -f "requirements.txt" ] && black productivity_dashboard/backend/
+
+# Frontend linting
+[ -f "productivity_dashboard/frontend/package.json" ] && cd productivity_dashboard/frontend && npm run lint
+
+echo "✅ Pre-commit checks passed!"

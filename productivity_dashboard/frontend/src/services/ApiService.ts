@@ -2,7 +2,7 @@ import ApiRoute from "./api.ts";
 
 export default class ApiService {
   static tasks = {
-    getAll: <T>() => new ApiRoute("tasks", "", "GET").routing<T[]>(),
+    getAll: <T>() => new ApiRoute("task", "", "GET").routing<T[]>(),
     getById: <T>(id: string) =>
       new ApiRoute("tasks", `${id}/`, "GET").routing<T>(),
     create: <T>(data: T) => new ApiRoute("tasks", "", "POST").routing<T>(data),
@@ -30,11 +30,11 @@ export default class ApiService {
     addPayments: <T>(data: T) =>
       new ApiRoute("users", "payment-methods/", "POST").routing<T>(data),
     updatePayments: <T>(id: string, data: T) =>
-      new ApiRoute("users", `payment-methods/${id}`, "PUT").routing<T>(data), // paymentmethods
+      new ApiRoute("users", `payment-methods/${id}/`, "PUT").routing<T>(data), // paymentmethods
     subscriptions: <T>(data: { phone_number: string }) =>
       new ApiRoute("users", "subscriptions/", "POST").routing<T>(data), // subscriptions has filling points like plan, status and renews on, and it is post
     upgradePremium: <T>(id: string) =>
-      new ApiRoute("users", `admin/upgrade-premium/${id}`, "POST").routing<T>(), //admin/upgrade-premium
+      new ApiRoute("users", `admin/upgrade-premium/${id}/`, "POST").routing<T>(), //admin/upgrade-premium
     initiatePremium: <T>() =>
       new ApiRoute("users", "subscriptions/premium/", "PATCH").routing<T>(), /// OF TYPE PATCH
   };

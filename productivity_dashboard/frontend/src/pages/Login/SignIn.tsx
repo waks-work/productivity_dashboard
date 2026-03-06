@@ -2,24 +2,27 @@ import React, { useState } from "react";
 import "./Login.css"
 import { useAuth } from "../../hooks/useAuth";
 
-export const LoginForm = () => {
+export const SignInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login } = useAuth();
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      alert("Password do not match retry again");
+      return;
+    }
     if (!email || !password) {
       alert("Please fill in both feilds.");
       return;
     }
-    const success = await login(email, password);
 
+    const success = await register(email, password);
     if (success) {
-      console.log("Login successful, redirecting...");
-    } else {
-      alert("Invalid credentials. Please try again.");
+      console.log("Registration successful...");
     }
   };
 
@@ -42,6 +45,8 @@ export const LoginForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="login-input"
             />
+
+            <span className="login-input-name">Enter your password:</span>
             <input
               type="password"
               onChange={(e) => setPassword(e.target.value)}
@@ -49,10 +54,19 @@ export const LoginForm = () => {
               placeholder="Password"
               className="login-input"
             />
-            <button className="login-button" onClick={handleSubmit}>Log In</button>
-            <span className="login-forgot">Forgot Password?</span>
+
+            <span className="login-input-name">Confirm your password:</span>
+            <input
+              type="password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={confirmPassword}
+              placeholder="Password"
+              className="login-input"
+            />
+            <button className="login-button" onClick={handleSubmit}>Sign In</button>
+            <span className="login-forgot">Already have an account?</span>
             <button className="login-register">
-              Create a new account
+              Login to your account
             </button>
           </div>
         </div>
@@ -61,4 +75,3 @@ export const LoginForm = () => {
     </div>
   )
 };
-

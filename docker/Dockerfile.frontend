@@ -1,0 +1,12 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY productivity_dashboard/frontend/package*.json .
+RUN npm install
+
+COPY productivity_dashboard/frontend/ .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
