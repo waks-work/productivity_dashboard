@@ -1,0 +1,66 @@
+.landing-wrapper {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem 10%;
+  align-items: center;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2d3436;
+}
+
+.hero-section {
+  text-align: center;
+  padding: 100px 10%;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  color: #2d3436;
+}
+
+.hero-section span {
+  color: #6c5ce7;
+  /* Distinctive Brand Color */
+}
+
+.btn-cta {
+  background-color: #6c5ce7;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 2rem;
+  transition: transform 0.2s;
+}
+
+.btn-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 50px 10%;
+}
+
+.feature {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+}

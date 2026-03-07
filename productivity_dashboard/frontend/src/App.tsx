@@ -1,24 +1,26 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { LoginForm } from "./pages/Login/Login";
-import { DashBoard } from "./pages/Dashboard/Dashboard";
-import { JSX } from "react";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { SignInForm } from "./pages/Login/SignIn";
+import { ProtectedRoute } from "./pages/Login/ProtectedRoute";
+import { LandingPage } from "./pages/LandingPage/LandingPage";
+import { NotFound } from "./pages/NotFound/Notfound";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const isAuthenticated = !!localStorage.getItem("access");
-  return isAuthenticated ? children : <Navigate to="/login" />;
-};
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signin" element=<SignInForm /> />
-        <Route path="/dashboard" element=<DashBoard /> />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+    </Router >
   );
 }
 

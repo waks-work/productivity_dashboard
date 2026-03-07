@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'
 import "./Login.css"
 import { useAuth } from "../../hooks/useAuth";
 
@@ -6,21 +7,21 @@ export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!email || !password) {
       alert("Please fill in both feilds.");
       return;
     }
-    const success = await login(email, password);
 
-    if (success) {
-      console.log("Login successful, redirecting...");
-    } else {
+    const success = await login(email, password);
+    if (!success) {
       alert("Invalid credentials. Please try again.");
     }
+    console.log("Login successful, redirecting...");
+    navigate('/dashboard');
   };
 
   return (
