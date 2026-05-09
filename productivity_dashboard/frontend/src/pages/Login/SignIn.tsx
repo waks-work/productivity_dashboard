@@ -29,9 +29,9 @@ export const SignInForm = () => {
         <div className='login'>
             <div className="login-wrapper">
                 <div className="login-left">
-                    <h3 className="login-logo">Productivity</h3>
+                    <h3 className="login-logo">TaskMaster</h3>
                     <span className="login-desc">
-                        Let us be more productive together.
+                        Join mordern teams and individual exellence.
                     </span>
                 </div>
 
@@ -43,29 +43,40 @@ export const SignInForm = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="login-input"
+                            required
                         />
 
-                        <span className="login-input-name">Enter your password:</span>
-                        <input
-                            type="password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            value={password}
-                            placeholder="Password"
-                            className="login-input"
-                        />
+                        <div>
+                            <span className="login-input-name">Enter your password:</span>
+                            <input
+                                type="password"
+                                onChange={(e) => setPassword(e.target.value)}
+                                value={password}
+                                placeholder="Min 8 characters..."
+                                style={{ width: '90%' }}
+                                className="login-input"
+                                required
+                            />
+                        </div>
 
-                        <span className="login-input-name">Confirm your password:</span>
-                        <input
-                            type="password"
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            value={confirmPassword}
-                            placeholder="Password"
-                            className="login-input"
-                        />
+                        <div>
+                            <span className="login-input-name">Confirm your password:</span>
+                            <input
+                                type="password"
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                value={confirmPassword}
+                                style={{ width: '90%' }}
+                                placeholder="Password..."
+                                className="login-input"
+                            />
+                        </div>
+
                         <button className="login-button" onClick={handleSubmit}>Sign In</button>
-                        <span className="login-forgot">Already have an account?</span>
+                        <span className="login-forgot" onClick={() => navigate('/login')}>Already have an account?</span>
+
+                        <hr style={{ border: '0.5px solid #333', margin: '10px 0' }} />
                         <button className="login-register">
-                            Login to your account
+                            Log In
                         </button>
                     </div>
                 </div>

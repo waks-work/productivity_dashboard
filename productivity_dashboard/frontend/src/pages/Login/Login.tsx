@@ -28,9 +28,9 @@ export const LoginForm = () => {
         <div className='login'>
             <div className="login-wrapper">
                 <div className="login-left">
-                    <h3 className="login-logo">Productivity</h3>
+                    <h3 className="login-logo">TaskMaster</h3>
                     <span className="login-desc">
-                        Let us be more productive together.
+                        Master your workflow boost productivity.
                     </span>
                 </div>
 
@@ -42,6 +42,7 @@ export const LoginForm = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="login-input"
+                            required
                         />
                         <input
                             type="password"
@@ -49,11 +50,13 @@ export const LoginForm = () => {
                             value={password}
                             placeholder="Password"
                             className="login-input"
+                            required
                         />
                         <button className="login-button" onClick={handleSubmit}>Log In</button>
                         <span className="login-forgot">Forgot Password?</span>
-                        <button className="login-register">
-                            Create a new account
+                        <hr style={{ border: '0.5px solid #333', width: '100%' }} />
+                        <button className="login-register" onClick={() => navigate('/signin')}>
+                            Join Now
                         </button>
                     </div>
                 </div>

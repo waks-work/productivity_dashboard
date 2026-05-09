@@ -17,14 +17,14 @@ export const LandingPage = () => {
                 <div className="brand">TaskMaster</div>
                 <div className="nav-links">
                     <Link to="/login" className="btn-secondary">Login</Link>
-                    <Link to="/register" className="btn-primary">Join Now</Link>
+                    <Link to="/signin" className="btn-primary">Join Now</Link>
                 </div>
             </nav>
 
             <header className="hero-section">
                 <h1>Master Your Workflow, <br /><span>Boost Productivity.</span></h1>
                 <p>The all-in-one task management platform designed for modern teams and individual excellence.</p>
-                <Link to="/register" className="btn-cta">Start for Free</Link>
+                <Link to="/signin" className="btn-cta">Start for Free</Link>
             </header>
 
             <section className="features">

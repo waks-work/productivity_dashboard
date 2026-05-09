@@ -12,7 +12,7 @@ export const NotFound = () => {
                     Let's get you back to being productive.
                 </p>
                 <Link to="/" className="notfound-btn">
-                    Back to Safety
+                    Back to Workspace
                 </Link>
             </div>
         </div>

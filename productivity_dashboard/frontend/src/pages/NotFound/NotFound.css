@@ -3,44 +3,52 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa;
+    background-color: black;
+    /* Matches TaskMaster background */
     text-align: center;
     font-family: 'Inter', sans-serif;
 }
 
 .notfound-code {
-    font-size: 8rem;
+    font-size: 10rem;
     font-weight: 900;
-    color: #6c5ce7;
+    color: white;
+    /* Removed purple */
     margin: 0;
     line-height: 1;
+    /* Subtle glow effect for a modern tech feel */
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .notfound-message {
     font-size: 2rem;
-    color: #2d3436;
-    margin-bottom: 1rem;
+    color: white;
+    margin: 1rem 0;
 }
 
 .notfound-desc {
-    color: #636e72;
-    max-width: 400px;
-    margin: 0 auto 2rem;
+    color: #a0a0a0;
+    /* Grey text for readability */
+    max-width: 450px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
 }
 
 .notfound-btn {
-    background-color: #6c5ce7;
-    color: white;
-    padding: 0.8rem 2rem;
+    background-color: white;
+    color: black;
+    padding: 1rem 2.5rem;
     border-radius: 8px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    transition: all 0.2s ease;
     display: inline-block;
+    border: 1px solid white;
 }
 
 .notfound-btn:hover {
-    background-color: #5b4cc4;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+    background-color: black;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
 }
