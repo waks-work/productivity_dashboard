@@ -5,23 +5,24 @@ import { SignInForm } from "./pages/Login/SignIn";
 import { ProtectedRoute } from "./pages/Login/ProtectedRoute";
 import { LandingPage } from "./pages/LandingPage/LandingPage";
 import { NotFound } from "./pages/NotFound/Notfound";
-
+import { Profile } from "./pages/Profile/Profile";
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/signin" element=<SignInForm /> />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/signin" element=<SignInForm /> />
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router >
-  );
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Router >
+    );
 }
 
 export default App;

@@ -1,7 +1,7 @@
 import React from 'react'
 import './Upcoming.css'
 
-const Upcoming = () => {
+export const Upcoming = () => {
     return (
         <div>
             <h2>Upcoming Tasks</h2>
@@ -15,4 +15,3 @@ const Upcoming = () => {
     )
 }
 
-export default Upcoming

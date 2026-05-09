@@ -1,7 +1,7 @@
 import React from 'react'
 import './RightBar.css'
 
-const RightBar = () => {
+export const RightBar = () => {
     return (
         <div>
             <h2>Right Bar</h2>
@@ -9,4 +9,3 @@ const RightBar = () => {
     )
 }
 
-export default RightBar

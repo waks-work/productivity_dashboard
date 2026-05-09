@@ -1,6 +1,6 @@
 import React from 'react'
 
-const MainLayout = () => {
+export const MainLayout = () => {
     return (
         <div>
             <h1>Main Layout</h1>
@@ -10,4 +10,3 @@ const MainLayout = () => {
     )
 }
 
-export default MainLayout

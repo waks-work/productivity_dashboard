@@ -11,15 +11,15 @@ import Journal from '../../components/Journal/Journal'
 const Task = () => {
     return (
         <div>
-            <Headers/>
-            <TaskNavBar/>
-            <Limit/>
-            <TaskList/>
-            <Progress/>
-            <Complete/>
-            <Journal/>
+            <Headers />
+            <TaskNavBar />
+            <Limit />
+            <TaskList />
+            <Progress />
+            <Complete />
+            <Journal />
         </div>
     )
-    }
+}
 
 export default Task

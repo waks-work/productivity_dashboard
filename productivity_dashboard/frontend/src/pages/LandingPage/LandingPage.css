@@ -1,66 +1,120 @@
 .landing-wrapper {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 100vh;
-  font-family: 'Inter', sans-serif;
+    background: black;
+    /* we can apply a black and grey linear gradient instead linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);*/
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
 }
 
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 1.5rem 10%;
-  align-items: center;
+    display: flex;
+    border-bottom: 1px solid #333;
+    justify-content: space-between;
+    padding: 1.5rem 10%;
+    align-items: center;
 }
 
 .brand {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #2d3436;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    /*color: #2d3436;*/
 }
 
 .hero-section {
-  text-align: center;
-  padding: 100px 10%;
+    text-align: center;
+    padding: 100px 10%;
 }
 
 .hero-section h1 {
-  font-size: 3.5rem;
-  line-height: 1.2;
-  color: #2d3436;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    color: white;
+    /*color: #2d3436;*/
 }
 
 .hero-section span {
-  color: #6c5ce7;
-  /* Distinctive Brand Color */
+    /*color: #6c5ce7; */
+    color: white;
+    /* Distinctive Brand Color */
 }
 
 .btn-cta {
-  background-color: #6c5ce7;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  display: inline-block;
-  margin-top: 2rem;
-  transition: transform 0.2s;
+    /*background-color: #6c5ce7;*/
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 2rem;
+    transition: transform 0.2s;
 }
 
 .btn-cta:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.btn-secondary {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-secondary:hover {
+    opacity: 0.7;
+}
+
+.btn-primary {
+    background: white;
+    color: black;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.hero-section p {
+    color: #a0a0a0;
+    /* Greyish text for better hierarchy */
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 1.5rem auto;
+}
+
+@media (max-width: 768px) {
+    .features {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
 }
 
 .features {
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  padding: 50px 10%;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 50px 10%;
 }
 
 .feature {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  font-weight: 500;
+    background: black;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
 }

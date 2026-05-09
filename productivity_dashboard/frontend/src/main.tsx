@@ -6,9 +6,9 @@ import App from './App.tsx';
 // Ensure the root element exists and is typed correctly
 const container = document.getElementById('root');
 if (container) {
-  createRoot(container).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
+    createRoot(container).render(
+        <StrictMode>
+            <App />
+        </StrictMode>,
+    );
 }

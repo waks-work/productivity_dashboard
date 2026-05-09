@@ -1,7 +1,7 @@
 import React from 'react'
 import './UserProfile.css'
 
-const UserProfile = () => {
+export const UserProfile = () => {
     return (
         <div>
             <h1>User Profile</h1>
@@ -13,4 +13,3 @@ const UserProfile = () => {
     )
 }
 
-export default UserProfile
