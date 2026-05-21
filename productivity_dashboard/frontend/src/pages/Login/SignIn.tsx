@@ -75,7 +75,7 @@ export const SignInForm = () => {
                         <span className="login-forgot" onClick={() => navigate('/login')}>Already have an account?</span>
 
                         <hr style={{ border: '0.5px solid #333', margin: '10px 0' }} />
-                        <button className="login-register">
+                        <button className="login-register" onClick={() => navigate("/login")}>
                             Log In
                         </button>
                     </div>

@@ -7,14 +7,14 @@ from productivity_dashboard.backend.backend import settings
 
 class Task(models.Model):
     PRIORITY_CHOICES= [
-        ("L","Low"),
-        ("M","Medium"),
-        ("H", "High")
+        ("LOW","Low"),
+        ("MEDIUM","Medium"),
+        ("HIGH", "High")
     ]
     STATUS_CHOICES = [
-        ("Todo","Todo"),
-        ("P","In Progress"),
-        ("D","Done")
+        ("TODO","Todo"),
+        ("PROGRESS","In Progress"),
+        ("DONE","Done")
         ]
 
     user =models.ForeignKey(
@@ -23,8 +23,8 @@ class Task(models.Model):
         related_name= 'tasks'
         )
     title = models.CharField(max_length=200)
-    priority = models.CharField(max_length=6, choices =PRIORITY_CHOICES)
-    status = models.CharField(max_length=6, choices = STATUS_CHOICES)
+    priority = models.CharField(max_length=20, choices =PRIORITY_CHOICES)
+    status = models.CharField(max_length=20, choices = STATUS_CHOICES)
     deadline = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

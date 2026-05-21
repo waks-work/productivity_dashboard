@@ -106,35 +106,273 @@
     font-weight: bold;
 }
 
-.task-list {
-    background: #0a0a0a;
-    padding: 2rem;
-    border-radius: 12px;
-    border: 1px solid #333;
-    margin-top: 2rem;
-}
-
 .task-item {
+    position: relative;
+
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0;
-    border-bottom: 1px solid #222;
+    align-items: center;
+
+    gap: 2rem;
+
+    padding: 1.5rem;
+
+    margin-bottom: 1rem;
+
+    background: #0a0a0a;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    z-index: 1;
 }
 
-.status {
+.task-item::before {
+    content: '';
+
+    position: absolute;
+
+    width: 200%;
+    height: 200%;
+
+    background:
+        conic-gradient(from 0deg,
+            transparent,
+            transparent,
+            transparent,
+            white);
+
+    animation: rotateBorder 4s linear infinite;
+
+    top: -50%;
+    left: -50%;
+
+    z-index: -2;
+}
+
+.task-item::after {
+    content: '';
+
+    position: absolute;
+
+    inset: 2px;
+
+    background: #0a0a0a;
+
+    border-radius: 16px;
+
+    z-index: -1;
+}
+
+.task-left h3 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.task-badges {
+    display: flex;
+    gap: 10px;
+}
+
+.task-right {
+    text-align: right;
+    min-width: 250px;
+}
+
+.task-right p {
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+
+.task-right span {
+    color: white;
+    margin-left: 6px;
+}
+
+.priority {
     padding: 4px 12px;
     border-radius: 6px;
+
     font-size: 0.75rem;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
-.status.completed {
+.priority.HIGH {
+    background: rgba(255, 0, 0, 0.15);
+    color: #ff6b6b;
+}
+
+.priority.MEDIUM {
+    background: rgba(255, 165, 0, 0.15);
+    color: orange;
+}
+
+.priority.LOW {
+    background: rgba(0, 255, 0, 0.15);
+    color: #34d399;
+}
+
+.status.TODO {
+    background: #1e3a8a;
+    color: #60a5fa;
+}
+
+.status.PROGRESS {
+    background: #92400e;
+    color: #fbbf24;
+}
+
+.status.DONE {
     background: #065f46;
     color: #34d399;
 }
 
-.status.pending {
-    background: #92400e;
-    color: #fbbf24;
+@keyframes rotateBorder {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+* USER PROFILE 
+* */
+.users-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.profile-wrapper {
+    position: relative;
+}
+
+.user-profile {
+    background: #1a1a1a;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid #333;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.user-profile:hover {
+    background: #222;
+    border-color: #555;
+}
+
+.profile-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 0;
+
+    width: 260px;
+
+    background: #0a0a0a;
+    border: 1px solid #333;
+
+    border-radius: 16px;
+
+    padding: 1rem;
+
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.6);
+
+    z-index: 999;
+
+    animation: dropdownFade 0.2s ease;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #222;
+}
+
+.profile-avatar {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    background: white;
+    color: black;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.profile-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: white;
+}
+
+.profile-header p {
+    margin: 4px 0 0;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.profile-menu button {
+    background: transparent;
+    border: none;
+
+    color: #ccc;
+
+    padding: 12px;
+    text-align: left;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+    font-size: 0.95rem;
+}
+
+.profile-menu button:hover {
+    background: #1a1a1a;
+    color: white;
+}
+
+.divider {
+    height: 1px;
+    background: #222;
+    margin: 10px 0;
+}
+
+.logout-btn {
+    color: #ff6b6b !important;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

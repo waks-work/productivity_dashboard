@@ -1,0 +1,133 @@
+.profile-page {
+    min-height: 100vh;
+    background: black;
+    color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2rem;
+
+    font-family: 'Inter', sans-serif;
+}
+
+.profile-card {
+    width: 100%;
+    max-width: 700px;
+
+    background: #0a0a0a;
+    border: 1px solid #222;
+
+    border-radius: 20px;
+
+    padding: 2rem;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #222;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: white;
+    color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.profile-top h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.profile-top p {
+    color: #888;
+    margin-top: 8px;
+}
+
+.profile-section {
+    margin-top: 2rem;
+}
+
+.profile-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.profile-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.profile-info div {
+    background: #111;
+    border: 1px solid #222;
+
+    border-radius: 14px;
+
+    padding: 1rem;
+}
+
+.profile-info span {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.profile-info p {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 1rem;
+
+    margin-top: 2rem;
+}
+
+.profile-actions button {
+    flex: 1;
+
+    padding: 14px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: white;
+    color: black;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.profile-actions button:hover {
+    opacity: 0.9;
+}
+
+.danger-btn {
+    background: #1a1a1a !important;
+    color: #ff6b6b !important;
+    border: 1px solid #333 !important;
+}

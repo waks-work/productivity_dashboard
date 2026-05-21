@@ -2,7 +2,7 @@ import ApiRoute from "./api.ts";
 
 export default class ApiService {
     static tasks = {
-        getAll: <T>() => new ApiRoute("task", "", "GET").routing<T[]>(),
+        getAll: <T>() => new ApiRoute("tasks", "", "GET").routing<T[]>(),
         getById: <T>(id: string) =>
             new ApiRoute("tasks", `${id}/`, "GET").routing<T>(),
         create: <T>(data: T) => new ApiRoute("tasks", "", "POST").routing<T>(data),

@@ -2,17 +2,36 @@ import React, { useEffect, useState, useCallback, memo } from 'react';
 import './Dashboard.css';
 import ApiService from '../../services/ApiService';
 import Whiteboard from './Whiteboard';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { SmartDisplay } from '@mui/icons-material';
+
+export interface UserProfile {
+    id?: string;
+    username?: string;
+    email: string;
+    timezone?: string;
+    profile_pic?: string;
+}
 
 export const Dashboard = () => {
     const [tasks, setTasks] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeView, setActiveView] = useState("Overview");
+    const [user, setUser] = useState<UserProfile | null>(null);
+    const [activeProfile, setActiveProfile] = useState<number | null>(null);
+    const navigate = useNavigate()
+    const { logout } = useAuth();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await ApiService.tasks.getAll();
-                setTasks(response.data);
+                const taskResponse = await ApiService.tasks.getAll<any>();
+                setTasks(taskResponse.data);
+
+                const profileResponse = await ApiService.users.getUserProfile<UserProfile>()
+                setUser(profileResponse.data);
+
             } catch (err) {
                 console.error("Failed to load dashboard data");
             } finally {
@@ -21,6 +40,24 @@ export const Dashboard = () => {
         };
         fetchData();
     }, []);
+
+    const handleLogout = async () => {
+        const logoutR = await logout();
+        navigate("/");
+    }
+
+    const toggleProfile = (index: number) => {
+        setActiveProfile(prev => prev === index ? null : index);
+    };
+
+    const getDisplayName = (email?: string) => {
+        if (!email) return "User";
+
+        return email
+            .split("@")[0]
+            .replace(/[._-]/g, " ")
+            .replace(/\b\w/g, char => char.toUpperCase());
+    };
 
     return (
         <div className="dashboard-container">
@@ -32,6 +69,11 @@ export const Dashboard = () => {
                             className={activeView === "Overview" ? "active" : ""}
                             onClick={() => setActiveView("Overview")}
                         > Overview
+                        </li>
+                        <li
+                            className={activeView === "Workspace" ? "active" : ""}
+                            onClick={() => setActiveView("Workspace")}
+                        >Workspace
                         </li>
                         <li
                             className={activeView === "Whiteboard" ? "active" : ""}
@@ -55,7 +97,57 @@ export const Dashboard = () => {
                     <>
                         <header className="top-bar">
                             <h1>Dashboard Overview</h1>
-                            <div className="user-profile">Waks Work</div>
+                            <div className="users-container">
+                                <div className="profile-wrapper">
+                                    <div
+                                        className="user-profile"
+                                        onClick={() => setActiveProfile(activeProfile ? null : 1)}
+                                    >
+                                        {user?.profile_pic ? (
+                                            <img
+                                                src={user.profile_pic}
+                                                alt="profile"
+                                                className='profile-image'
+                                            />) : (
+                                            getDisplayName(user?.email).charAt(0)
+                                        )}
+                                    </div>
+
+                                    {activeProfile && (
+                                        <div className="profile-dropdown">
+                                            <div className="profile-header">
+                                                <div className="profile-avatar">
+                                                    {user?.profile_pic ? (
+                                                        <img
+                                                            src={user.profile_pic}
+                                                            alt="profile"
+                                                            className='profile-avatar-image'
+                                                        />) : (
+                                                        getDisplayName(user?.email).charAt(0)
+                                                    )}
+                                                </div>
+
+                                                <div>
+                                                    <h3>{getDisplayName(user?.email)}</h3>
+                                                    <p>{user?.timezone}</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="profile-menu">
+                                                <button onClick={() => navigate("/profile")}>Profile</button>
+                                                <button>Settings</button>
+                                                <button>Analytics</button>
+
+                                                <div className="divider"></div>
+
+                                                <button className="logout-btn" onClick={handleLogout}>
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </header>
 
                         <section className="stats-grid">
@@ -70,14 +162,57 @@ export const Dashboard = () => {
                                 <ul>
                                     {tasks.map(task => (
                                         <li key={task.id} className="task-item">
-                                            <span>{task.title}</span>
-                                            <span className={`status ${task.status}`}>{task.status}</span>
+                                            <div className="task-left">
+                                                <h3>{task.title}</h3>
+                                                <div className="task-badges">
+                                                    <span className={`status ${task.status}`} >
+                                                        {task.status_display}
+                                                    </span>
+
+                                                    <span className={`priority ${task.priority}`} >
+                                                        {task.priority_display}
+                                                    </span>
+                                                </div>
+
+                                            </div>
+
+                                            <div className="task-right">
+                                                <p>
+                                                    Assigned to:
+                                                    <span>{getDisplayName(user?.email)}</span>
+                                                </p>
+                                                <p>
+                                                    Deadline:
+                                                    <span>
+                                                        {task.deadline
+                                                            ? new Date(task.deadline)
+                                                                .toLocaleDateString()
+                                                            : "No deadline"}
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    Created:
+                                                    <span>
+                                                        {new Date(task.created_at)
+                                                            .toLocaleDateString()}
+                                                    </span>
+                                                </p>
+
+                                            </div>
+
                                         </li>
                                     ))}
                                 </ul>
                             )}
                         </section>
                     </>
+                )}
+
+                {activeView === "Workspace" && (
+                    <section className="workspace-area">
+                        <h2>Workspace</h2>
+                    </section>
                 )}
                 {activeView === "Whiteboard" && (
                     <section className="whiteboard-area">
