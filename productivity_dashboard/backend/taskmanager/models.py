@@ -27,9 +27,20 @@ class Task(models.Model):
     status = models.CharField(max_length=20, choices = STATUS_CHOICES)
     deadline = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(blank=True, null=True)
 
     class Meta:
         app_label = 'taskmanager'
 
     def __str__(self) -> str:
         return self.title
+
+class TaskNote(models.Model):
+    task = models.ForeignKey('Task', on_delete=models.CASCADE,related_name='notes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'Note for {self.task.title}'

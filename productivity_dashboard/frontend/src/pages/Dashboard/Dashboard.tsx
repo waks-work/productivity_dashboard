@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback, memo } from 'react';
+import './Workspace.css';
 import './Dashboard.css';
 import ApiService from '../../services/ApiService';
 import Whiteboard from './Whiteboard';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { SmartDisplay } from '@mui/icons-material';
+import { Workspace } from './Workspace';
 
 export interface UserProfile {
     id?: string;
@@ -168,39 +169,25 @@ export const Dashboard = () => {
                                                     <span className={`status ${task.status}`} >
                                                         {task.status_display}
                                                     </span>
-
                                                     <span className={`priority ${task.priority}`} >
                                                         {task.priority_display}
                                                     </span>
                                                 </div>
-
                                             </div>
 
                                             <div className="task-right">
-                                                <p>
-                                                    Assigned to:
-                                                    <span>{getDisplayName(user?.email)}</span>
-                                                </p>
-                                                <p>
-                                                    Deadline:
+                                                <p> Assigned to: <span>{getDisplayName(user?.email)}</span> </p>
+                                                <p> Deadline:
                                                     <span>
-                                                        {task.deadline
-                                                            ? new Date(task.deadline)
-                                                                .toLocaleDateString()
-                                                            : "No deadline"}
+                                                        {task.deadline ? new Date(task.deadline).toLocaleDateString() : "No deadline"}
                                                     </span>
                                                 </p>
-
-                                                <p>
-                                                    Created:
+                                                <p> Created:
                                                     <span>
-                                                        {new Date(task.created_at)
-                                                            .toLocaleDateString()}
+                                                        {new Date(task.created_at).toLocaleDateString()}
                                                     </span>
                                                 </p>
-
                                             </div>
-
                                         </li>
                                     ))}
                                 </ul>
@@ -211,7 +198,7 @@ export const Dashboard = () => {
 
                 {activeView === "Workspace" && (
                     <section className="workspace-area">
-                        <h2>Workspace</h2>
+                        < Workspace />
                     </section>
                 )}
                 {activeView === "Whiteboard" && (
@@ -233,7 +220,7 @@ export const Dashboard = () => {
                     </section>
                 )}
             </main>
-        </div>
+        </div >
     );
 };
 

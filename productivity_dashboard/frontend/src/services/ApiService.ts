@@ -12,6 +12,11 @@ export default class ApiService {
             new ApiRoute("tasks", `${id}/`, "DELETE").routing<void>(),
     };
 
+    static notes = {
+        getTaskNotes: <T>(taskId: number) => new ApiRoute("notes", `?task=${taskId}`, "GET").routing<T[]>(),
+        createNote: <T>(data: T) => new ApiRoute("notes", "", "POST").routing<T>(data),
+    };
+
     static analytics = {
         getActivityLog: <T>() =>
             new ApiRoute("analytics", "activity-logs/", "GET").routing<T[]>(),
