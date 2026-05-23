@@ -62,95 +62,87 @@ export const Dashboard = () => {
 
     return (
         <div className="dashboard-container">
-            <aside className="sidebar">
-                <div className="logo">TaskMaster</div>
-                <nav>
-                    <ul>
-                        <li
-                            className={activeView === "Overview" ? "active" : ""}
-                            onClick={() => setActiveView("Overview")}
-                        > Overview
-                        </li>
-                        <li
-                            className={activeView === "Workspace" ? "active" : ""}
-                            onClick={() => setActiveView("Workspace")}
-                        >Workspace
-                        </li>
-                        <li
-                            className={activeView === "Whiteboard" ? "active" : ""}
-                            onClick={() => setActiveView("Whiteboard")}
-                        > Whiteboard
-                        </li>
-                        <li
-                            className={activeView === "Analytics" ? "active" : ""}
-                            onClick={() => setActiveView("Analytics")}
-                        > Analytics</li>
-                        <li
-                            className={activeView === "Settings" ? "active" : ""}
-                            onClick={() => setActiveView("Settings")}
-                        > Settings</li>
-                    </ul>
+            <header className="dashboard-navbar">
+                <div className="dashboard-logo">
+                    TaskMaster
+                </div>
+                <nav className="dashboard-nav">
+                    <button
+                        className={activeView === "Overview" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Overview")}
+                    > Overview </button>
+                    <button
+                        className={activeView === "Workspace" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Workspace")}
+                    > Workspace </button>
+                    <button
+                        className={activeView === "Whiteboard" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Whiteboard")}
+                    > Whiteboard </button>
+                    <button
+                        className={activeView === "Analytics" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Analytics")}
+                    > Analytics </button>
+                    <button
+                        className={activeView === "Settings" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Settings")}
+                    > Settings </button>
                 </nav>
-            </aside>
+
+                <div className="navbar-profile">
+                    <div
+                        className="user-profile"
+                        onClick={() => setActiveProfile(activeProfile ? null : 1)}
+                    > {user?.profile_pic ? (
+                        <img
+                            src={user.profile_pic}
+                            alt="profile"
+                            className='profile-image'
+                        />) : (
+                        getDisplayName(user?.email).charAt(0)
+                    )}
+                    </div>
+
+                    {activeProfile && (
+                        <div className="profile-dropdown">
+                            <div className="profile-header">
+                                <div className="profile-avatar">
+                                    {user?.profile_pic ? (
+                                        <img
+                                            src={user.profile_pic}
+                                            alt="profile"
+                                            className='profile-avatar-image'
+                                        />) : (
+                                        getDisplayName(user?.email).charAt(0)
+                                    )}
+                                </div>
+
+                                <div>
+                                    <h3>{getDisplayName(user?.email)}</h3>
+                                    <p>{user?.timezone}</p>
+                                </div>
+                            </div>
+
+                            <div className="profile-menu">
+                                <button onClick={() => navigate("/profile")}>Profile</button>
+                                <button>Settings</button>
+                                <button>Analytics</button>
+
+                                <div className="divider"></div>
+
+                                <button className="logout-btn" onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+            </header>
 
             <main className="main-content">
                 {activeView === "Overview" && (
                     <>
-                        <header className="top-bar">
-                            <h1>Dashboard Overview</h1>
-                            <div className="users-container">
-                                <div className="profile-wrapper">
-                                    <div
-                                        className="user-profile"
-                                        onClick={() => setActiveProfile(activeProfile ? null : 1)}
-                                    >
-                                        {user?.profile_pic ? (
-                                            <img
-                                                src={user.profile_pic}
-                                                alt="profile"
-                                                className='profile-image'
-                                            />) : (
-                                            getDisplayName(user?.email).charAt(0)
-                                        )}
-                                    </div>
-
-                                    {activeProfile && (
-                                        <div className="profile-dropdown">
-                                            <div className="profile-header">
-                                                <div className="profile-avatar">
-                                                    {user?.profile_pic ? (
-                                                        <img
-                                                            src={user.profile_pic}
-                                                            alt="profile"
-                                                            className='profile-avatar-image'
-                                                        />) : (
-                                                        getDisplayName(user?.email).charAt(0)
-                                                    )}
-                                                </div>
-
-                                                <div>
-                                                    <h3>{getDisplayName(user?.email)}</h3>
-                                                    <p>{user?.timezone}</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="profile-menu">
-                                                <button onClick={() => navigate("/profile")}>Profile</button>
-                                                <button>Settings</button>
-                                                <button>Analytics</button>
-
-                                                <div className="divider"></div>
-
-                                                <button className="logout-btn" onClick={handleLogout}>
-                                                    Logout
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </header>
-
                         <section className="stats-grid">
                             <div className="stat-card"><h3>Active Tasks</h3><p>{tasks.length}</p></div>
                             <div className="stat-card"><h3>Productivity</h3><p>87%</p></div>
@@ -203,20 +195,117 @@ export const Dashboard = () => {
                 )}
                 {activeView === "Whiteboard" && (
                     <section className="whiteboard-area">
-                        <h2>Whiteboard Canvas</h2>
                         <Whiteboard />
                     </section>
                 )}
 
                 {activeView === "Analytics" && (
                     <section className="analytics-area">
-                        <h2>User Analytics</h2>
+                        <div className="analytics-grid">
+                            <div className="analytics-card">
+                                <h3>Total Tasks</h3>
+                                <p>128</p>
+                            </div>
+
+                            <div className="analytics-card">
+                                <h3>Completed</h3>
+                                <p>84</p>
+                            </div>
+
+                            <div className="analytics-card">
+                                <h3>Productivity</h3>
+                                <p>87%</p>
+                            </div>
+
+                            <div className="analytics-card">
+                                <h3>Active Boards</h3>
+                                <p>12</p>
+                            </div>
+
+                            <div className="analytics-large-card">
+                                <div className="card-header">
+                                    <h2>Weekly Productivity</h2>
+                                </div>
+
+                                <div className="chart-placeholder">
+                                    Chart Area
+                                </div>
+                            </div>
+
+                            <div className="analytics-large-card">
+                                <div className="card-header">
+                                    <h2>Recent Activity</h2>
+                                </div>
+
+                                <div className="activity-list">
+                                    <div className="activity-item">
+                                        Completed task "Landing Page"
+                                    </div>
+
+                                    <div className="activity-item">
+                                        Added note to API project
+                                    </div>
+
+                                    <div className="activity-item">
+                                        Created Whiteboard "System Design"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 )}
 
                 {activeView === "Settings" && (
                     <section className="settings-area">
-                        <h2>User settings</h2>
+                        <div className="settings-layout">
+                            <div className="settings-sidebar">
+                                <button className="active-setting">
+                                    Profile
+                                </button>
+
+                                <button>
+                                    Appearance
+                                </button>
+
+                                <button>
+                                    Notifications
+                                </button>
+
+                                <button>
+                                    Workspace
+                                </button>
+
+                                <button>
+                                    Security
+                                </button>
+                            </div>
+
+                            <div className="settings-content">
+                                <div className="settings-card">
+                                    <h2>Profile Settings</h2>
+                                    <div className="settings-form">
+                                        <div className="settings-group">
+                                            <label>Username</label>
+                                            <input type="text" placeholder="Your username" />
+                                        </div>
+
+                                        <div className="settings-group">
+                                            <label>Email</label>
+                                            <input type="email" placeholder="you@example.com" />
+                                        </div>
+
+                                        <div className="settings-group">
+                                            <label>Timezone</label>
+                                            <input type="text" placeholder="Africa/Nairobi" />
+                                        </div>
+
+                                        <button className="save-settings-btn">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 )}
             </main>

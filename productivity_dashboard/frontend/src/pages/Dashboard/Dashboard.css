@@ -1,48 +1,70 @@
 .dashboard-container {
-    display: flex;
     min-height: 100vh;
     background: black;
     color: white;
-    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
-.sidebar {
-    width: 240px;
+.dashboard-navbar {
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 2rem;
+
+    border-bottom: 1px solid #222;
+
     background: #0a0a0a;
-    border-right: 1px solid #333;
-    padding: 2rem;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
 }
 
-.sidebar .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 3rem;
+.dashboard-logo {
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+.dashboard-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
-.sidebar li {
-    padding: 12px 15px;
-    margin-bottom: 5px;
+.dashboard-nav button {
+    background: transparent;
+    border: none;
+
+    color: #888;
+
+    padding: 0.8rem 1rem;
+
+    border-radius: 10px;
+
     cursor: pointer;
-    color: #a0a0a0;
-    border-radius: 8px;
-    transition: 0.2s;
+
+    transition: 0.2s ease;
 }
 
-.sidebar li:hover {
-    background: #1a1a1a;
+.dashboard-nav button:hover {
+    background: #151515;
     color: white;
 }
 
-.sidebar li.active {
-    color: black;
-    background: white;
+.active-nav {
+    background: white !important;
+    color: black !important;
     font-weight: 600;
+}
+
+.dashboard-main-content {
+    flex: 1;
+    padding: 1.5rem;
 }
 
 .main-content {
@@ -374,5 +396,234 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* ANALYTICS CSS */
+
+.analytics-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 1.5rem;
+}
+
+.analytics-card,
+.analytics-large-card {
+    background: #0a0a0a;
+
+    border: 1px solid #1f1f1f;
+
+    border-radius: 20px;
+
+    padding: 1.5rem;
+}
+
+.analytics-card h3 {
+    color: #888;
+
+    font-size: 0.95rem;
+
+    margin-bottom: 1rem;
+}
+
+.analytics-card p {
+    font-size: 2rem;
+
+    font-weight: 700;
+}
+
+.analytics-large-card {
+    grid-column: span 2;
+
+    min-height: 300px;
+}
+
+.chart-placeholder {
+    height: 220px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(135deg,
+            #111,
+            #181818);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #666;
+}
+
+.activity-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-top: 1rem;
+}
+
+.activity-item {
+    padding: 1rem;
+
+    border-radius: 14px;
+
+    background: #111;
+
+    color: #ccc;
+}
+
+@media (max-width: 1000px) {
+
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-large-card {
+        grid-column: span 1;
+    }
+}
+
+/* SETTINGS CSS */
+
+.settings-layout {
+    display: flex;
+
+    gap: 2rem;
+}
+
+.settings-sidebar {
+    width: 240px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.7rem;
+}
+
+.settings-sidebar button {
+    background: transparent;
+
+    border: 1px solid #222;
+
+    color: #aaa;
+
+    padding: 1rem;
+
+    border-radius: 14px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.settings-sidebar button:hover {
+    background: #111;
+
+    color: white;
+}
+
+.active-setting {
+    background: #151515 !important;
+
+    color: white !important;
+
+    border-color: #333 !important;
+}
+
+.settings-content {
+    flex: 1;
+}
+
+.settings-card {
+    background: #0a0a0a;
+
+    border: 1px solid #1f1f1f;
+
+    border-radius: 20px;
+
+    padding: 2rem;
+}
+
+.settings-card h2 {
+    margin-bottom: 2rem;
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+}
+
+.settings-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.7rem;
+}
+
+.settings-group label {
+    color: #888;
+
+    font-size: 0.9rem;
+}
+
+.settings-group input {
+    background: #111;
+
+    border: 1px solid #222;
+
+    color: white;
+
+    padding: 1rem;
+
+    border-radius: 14px;
+
+    outline: none;
+}
+
+.settings-group input:focus {
+    border-color: #444;
+}
+
+.save-settings-btn {
+    width: fit-content;
+
+    background: white;
+    color: black;
+
+    border: none;
+
+    padding: 1rem 1.5rem;
+
+    border-radius: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+
+    .settings-layout {
+        flex-direction: column;
+    }
+
+    .settings-sidebar {
+        width: 100%;
+
+        flex-direction: row;
+
+        overflow-x: auto;
+    }
+
+    .settings-sidebar button {
+        min-width: 160px;
     }
 }

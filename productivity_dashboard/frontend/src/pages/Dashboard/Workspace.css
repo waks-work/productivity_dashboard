@@ -10,10 +10,10 @@
 
 .workspace-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
 
-    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .workspace-header h1 {

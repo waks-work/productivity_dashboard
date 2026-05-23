@@ -29,6 +29,13 @@ interface TaskNote {
     created_at?: string;
 }
 
+interface QuickNote {
+    id?: number;
+    content: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
 export const Workspace = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(false);
@@ -46,6 +53,8 @@ export const Workspace = () => {
     const [notes, setNotes] = useState<TaskNote[]>([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
     const [draggedTask, setDraggedTask] = useState<Task | null>(null)
+    const [quickNote, setQuickNote] = useState("");
+    const [quickNoteId, setQuickNoteId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -59,6 +68,18 @@ export const Workspace = () => {
             }
         };
         fetchTasks();
+        const fetchQuickNotes = async () => {
+            try {
+                const response = await ApiService.quick_notes.getAll<any>();
+                if (response.data.length > 0) {
+                    setQuickNote(response.data[0].content);
+                    setQuickNoteId(response.data[0].id);
+                }
+            } catch (error) {
+                console.error("Failed to  fetch quick notes")
+            }
+        };
+        fetchQuickNotes();
     }, []);
 
     const todoTasks = tasks.filter(task => task.status === "TODO");
@@ -130,14 +151,24 @@ export const Workspace = () => {
         }
         setDraggedTask(null);
     };
+
+    const handleSaveQuickNotes = async () => {
+        try {
+            if (quickNoteId) {
+                await ApiService.quick_notes.update(quickNoteId, { content: quickNote })
+            } else {
+                const response = await ApiService.quick_notes.create<QuickNote>({ content: quickNote });
+                if (response.data.id) {
+                    setQuickNoteId(response.data.id)
+                }
+            }
+        } catch (error) {
+            console.error("Failed to save quick note");
+        }
+    };
     return (
         <div className="workspace-container">
             <div className="workspace-header">
-                <div>
-                    <h1>Workspace</h1>
-                    <p>Organize and track your tasks</p>
-                </div>
-
                 <button
                     className="workspace-btn"
                     onClick={() => setShowCreateModal(true)}
@@ -247,7 +278,10 @@ export const Workspace = () => {
                     <textarea
                         placeholder="Write your notes..."
                         className="workspace-notes"
+                        value={quickNote}
+                        onChange={(e) => setQuickNote(e.target.value)}
                     />
+                    <button className="submit-btn" onClick={handleSaveQuickNotes} >Save Notes</button>
                 </section>
             </div >
             {showCreateModal && (

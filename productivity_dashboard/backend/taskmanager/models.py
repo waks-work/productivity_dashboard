@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models.fields.related import ForeignKey
 #from backend.backend import settings
 #from django.contrib.auth.models import User
 
@@ -44,3 +45,24 @@ class TaskNote(models.Model):
 
     def __str__(self):
         return f'Note for {self.task.title}'
+
+class QuickNote(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="quick_notes")
+    content = models.TextField()
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user} Quick Note'
+
+class WhiteBoard(models.Model): 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="whiteboards")
+    title = models.CharField(max_length=200, default="My WhiteBoard")
+    nodes = models.JSONField(default=list)
+    edges = models.JSONField(default=list)
+    created_at= models.DateTimeField(auto_now_add=True)
+    updated_at= models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+

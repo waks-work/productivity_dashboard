@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Task, TaskNote
+from .models import Task, TaskNote, QuickNote, WhiteBoard
 
 class TaskSerializer(serializers.ModelSerializer):
     priority_display = serializers.CharField(
@@ -46,4 +46,23 @@ class TaskNoteSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
+
+class QuickNoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuickNote
+        fields = ['id', 'user', 'content', 'created_at']
+        read_only_fields = ['user']
+
+class WhiteboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WhiteBoard
+        fields = [
+            "id",
+            "title",
+            "nodes",
+            "edges",
+            "created_at",
+            "updated_at"
+        ]
+
 

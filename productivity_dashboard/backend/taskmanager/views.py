@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from taskmanager.models import Task, TaskNote
-from taskmanager.serializers import TaskNoteSerializer, TaskSerializer
+from taskmanager.models import QuickNote, Task, TaskNote, WhiteBoard
+from taskmanager.serializers import QuickNoteSerializer, TaskNoteSerializer, TaskSerializer, WhiteboardSerializer
 from django.contrib.auth import get_user_model
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -25,3 +25,22 @@ class TaskNoteViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+class QuickNoteViewSet(viewsets.ModelViewSet):
+    serializer_class = QuickNoteSerializer
+
+    def get_queryset(self):
+        return QuickNote.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class WhiteboardViewSet(viewsets.ModelViewSet):
+    serializer_class = WhiteboardSerializer
+
+    def get_queryset(self):
+        return WhiteBoard.objects.filter(
+            user=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

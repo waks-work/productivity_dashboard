@@ -17,6 +17,25 @@ export default class ApiService {
         createNote: <T>(data: T) => new ApiRoute("notes", "", "POST").routing<T>(data),
     };
 
+    static quick_notes = {
+        getAll: <T>() => new ApiRoute("quick-notes", "", "GET").routing<T>(),
+        create: <T>(data: Partial<T>) =>
+            new ApiRoute("quick-notes/", "", "POST").routing<T>(data),
+        update: <T>(id: number, data: Partial<T>) =>
+            new ApiRoute("quick-notes", `${id}/`, "PATCH").routing<T>(data)
+    }
+
+    static whiteboards = {
+        getAll: <T>() =>
+            new ApiRoute("whiteboards", "", "GET").routing<T>(),
+
+        create: <T>(data: Partial<T>) =>
+            new ApiRoute("whiteboards", "", "POST").routing<T>(data),
+
+        update: <T>(id: number, data: Partial<T>) =>
+            new ApiRoute("whiteboards", `${id}/`, "PATCH").routing<T>(data),
+    };
+
     static analytics = {
         getActivityLog: <T>() =>
             new ApiRoute("analytics", "activity-logs/", "GET").routing<T[]>(),
