@@ -108,11 +108,10 @@ const WhiteboardContent = () => {
 
     const createBoard = async () => {
         try {
-            const response = await ApiService.whiteboards.create<WhiteboardType>(
-                {
-                    title: `Board ${boards.length + 1}`,
-                    nodes: [], edges: []
-                });
+            const response = await ApiService.whiteboards.create<WhiteboardType>({
+                title: `Board ${boards.length + 1}`,
+                nodes: [], edges: []
+            });
             const newBoard = response.data;
             setBoards((prev) => [...prev, newBoard]);
             setSelectedBoardId(newBoard.id || null);

@@ -1,0 +1,208 @@
+.journal-layout {
+    display: flex;
+
+    gap: 1.5rem;
+
+    height: 100%;
+}
+
+/* SIDEBAR */
+
+.journal-sidebar {
+    width: 320px;
+
+    background: #0a0a0a;
+
+    border: 1px solid #1d1d1d;
+
+    border-radius: 20px;
+
+    padding: 1.5rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.journal-sidebar-header {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.new-journal-btn {
+    background: white;
+    color: black;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 0.9rem 1rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+/* JOURNAL LIST */
+
+.journal-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    overflow-y: auto;
+}
+
+.journal-item {
+    background: #111;
+
+    border: 1px solid #222;
+
+    border-radius: 16px;
+
+    padding: 1rem;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.journal-item:hover {
+    background: #151515;
+}
+
+.active-journal {
+    border-color: #333;
+}
+
+.journal-item h4 {
+    margin-bottom: 0.5rem;
+}
+
+.journal-item span {
+    color: #888;
+
+    font-size: 0.85rem;
+}
+
+/* EDITOR */
+
+.journal-editor {
+    flex: 1;
+
+    background: #0a0a0a;
+
+    border: 1px solid #1d1d1d;
+
+    border-radius: 20px;
+
+    padding: 2rem;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.journal-editor-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.journal-title-input {
+    flex: 1;
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    font-size: 1.5rem;
+
+    font-weight: 700;
+
+    outline: none;
+}
+
+.journal-date {
+    color: #888;
+}
+
+.journal-textarea {
+    flex: 1;
+
+    resize: none;
+
+    background: #111;
+
+    border: 1px solid #222;
+
+    border-radius: 18px;
+
+    padding: 1.5rem;
+
+    color: white;
+
+    font-size: 1rem;
+
+    line-height: 1.7;
+
+    outline: none;
+}
+
+.journal-textarea:focus {
+    border-color: #333;
+}
+
+.journal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 1.5rem;
+}
+
+.save-journal-btn {
+    background: white;
+    color: black;
+
+    border: none;
+
+    border-radius: 14px;
+
+    padding: 1rem 1.5rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+
+    .journal-layout {
+        flex-direction: column;
+    }
+
+    .journal-sidebar {
+        width: 100%;
+    }
+
+    .journal-editor-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

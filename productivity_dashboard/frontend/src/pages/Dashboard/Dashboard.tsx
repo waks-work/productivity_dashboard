@@ -6,6 +6,7 @@ import Whiteboard from './Whiteboard';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Workspace } from './Workspace';
+import { Journal } from './Journal';
 
 export interface UserProfile {
     id?: string;
@@ -79,6 +80,10 @@ export const Dashboard = () => {
                         className={activeView === "Whiteboard" ? "active-nav" : ""}
                         onClick={() => setActiveView("Whiteboard")}
                     > Whiteboard </button>
+                    <button
+                        className={activeView === "Journal" ? "active-nav" : ""}
+                        onClick={() => setActiveView("Journal")}
+                    > Journal </button>
                     <button
                         className={activeView === "Analytics" ? "active-nav" : ""}
                         onClick={() => setActiveView("Analytics")}
@@ -196,6 +201,12 @@ export const Dashboard = () => {
                 {activeView === "Whiteboard" && (
                     <section className="whiteboard-area">
                         <Whiteboard />
+                    </section>
+                )}
+
+                {activeView === "Journal" && (
+                    <section className="journal-area">
+                        <Journal />
                     </section>
                 )}
 

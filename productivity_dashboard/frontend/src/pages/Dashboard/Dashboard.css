@@ -627,3 +627,9 @@
         min-width: 160px;
     }
 }
+
+/* JOURNAL */
+.journal-area {
+    width: 100%;
+    height: calc(100vh - 90px);
+}

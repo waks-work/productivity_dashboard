@@ -1,7 +1,8 @@
 from rest_framework import viewsets
-from taskmanager.models import QuickNote, Task, TaskNote, WhiteBoard
-from taskmanager.serializers import QuickNoteSerializer, TaskNoteSerializer, TaskSerializer, WhiteboardSerializer
+from taskmanager.models import Journal, QuickNote, Task, TaskNote, WhiteBoard
+from taskmanager.serializers import JournalSerializer, QuickNoteSerializer, TaskNoteSerializer, TaskSerializer, WhiteboardSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
 
 class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
@@ -39,6 +40,18 @@ class WhiteboardViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return WhiteBoard.objects.filter(
+            user=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class JournalViewSet(viewsets.ModelViewSet):
+    serializer_class = JournalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Journal.objects.filter(
             user=self.request.user
         )
 

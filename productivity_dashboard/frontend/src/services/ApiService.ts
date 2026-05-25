@@ -23,7 +23,15 @@ export default class ApiService {
             new ApiRoute("quick-notes/", "", "POST").routing<T>(data),
         update: <T>(id: number, data: Partial<T>) =>
             new ApiRoute("quick-notes", `${id}/`, "PATCH").routing<T>(data)
-    }
+    };
+
+    static journal = {
+        list: <T>() => new ApiRoute("journals", "", "GET").routing<T>(),
+        get: <T>(id: number) => new ApiRoute("journals", `${id}/`, "GET").routing<T>(),
+        create: <T>(data: Partial<T>) => new ApiRoute("journals/", "", "POST").routing<T>(data),
+        update: <T>(id: number, data: T) => new ApiRoute("journals", `${id}/`, "PATCH").routing<T>(data),
+        delete: (id: number) => new ApiRoute("journals", `${id}/`, "DELETE").routing<void>()
+    };
 
     static whiteboards = {
         getAll: <T>() =>
