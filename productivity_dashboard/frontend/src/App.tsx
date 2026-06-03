@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./pages/Login/ProtectedRoute";
 import { LandingPage } from "./pages/LandingPage/LandingPage";
 import { NotFound } from "./pages/NotFound/Notfound";
 import { Profile } from "./pages/Profile/Profile";
+import { CustomWhiteboard } from "./pages/Dashboard/CustomWhiteboard";
 
 function App() {
     return (
@@ -18,7 +19,7 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/profile" element={<Profile />} />
                 </Route>
-
+                <Route path="/custom-wb" element={<CustomWhiteboard />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </Router >

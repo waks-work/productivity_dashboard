@@ -83,9 +83,7 @@ export const Workspace = () => {
     }, []);
 
     const todoTasks = tasks.filter(task => task.status === "TODO");
-    const progressTasks = tasks.filter(
-        task => task.status === "PROGRESS"
-    );
+    const progressTasks = tasks.filter(task => task.status === "PROGRESS");
     const doneTasks = tasks.filter(task => task.status === "DONE");
 
     const handleSubmit = async () => {

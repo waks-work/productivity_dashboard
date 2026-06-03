@@ -35,7 +35,7 @@ export const Dashboard = () => {
                 setUser(profileResponse.data);
 
             } catch (err) {
-                console.error("Failed to load dashboard data");
+                console.error("Failed to load dashboard data: ", err);
             } finally {
                 setLoading(false);
             }
@@ -43,8 +43,8 @@ export const Dashboard = () => {
         fetchData();
     }, []);
 
-    const handleLogout = async () => {
-        const logoutR = await logout();
+    const handleLogout = () => {
+        logout();
         navigate("/");
     }
 
@@ -54,7 +54,6 @@ export const Dashboard = () => {
 
     const getDisplayName = (email?: string) => {
         if (!email) return "User";
-
         return email
             .split("@")[0]
             .replace(/[._-]/g, " ")

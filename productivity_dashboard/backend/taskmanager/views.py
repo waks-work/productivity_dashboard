@@ -39,9 +39,7 @@ class WhiteboardViewSet(viewsets.ModelViewSet):
     serializer_class = WhiteboardSerializer
 
     def get_queryset(self):
-        return WhiteBoard.objects.filter(
-            user=self.request.user
-        )
+        return WhiteBoard.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -51,9 +49,7 @@ class JournalViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Journal.objects.filter(
-            user=self.request.user
-        )
+        return Journal.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
