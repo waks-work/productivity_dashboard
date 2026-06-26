@@ -7,7 +7,7 @@ source venv/bin/activate
 # Start backend in background
 echo "🐍 Starting Django backend..."
 cd productivity_dashboard/backend
-python manage.py runserver &
+python3 manage.py runserver &
 BACKEND_PID=$!
 cd ../..
 

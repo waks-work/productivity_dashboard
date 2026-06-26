@@ -20,7 +20,7 @@ export default class ApiService {
     static quick_notes = {
         getAll: <T>() => new ApiRoute("quick-notes", "", "GET").routing<T>(),
         create: <T>(data: Partial<T>) =>
-            new ApiRoute("quick-notes/", "", "POST").routing<T>(data),
+            new ApiRoute("quick-notes", "", "POST").routing<T>(data),
         update: <T>(id: number, data: Partial<T>) =>
             new ApiRoute("quick-notes", `${id}/`, "PATCH").routing<T>(data)
     };

@@ -21,41 +21,44 @@ export const Journal = () => {
     }, []);
 
     const loadJournal = async (id: number) => {
-        try {
-            const response = await ApiService.journal.get<Journal>(id);
-            console.log("journal detail:", response.data);
-            const journal = response.data;
-            setSelectedJournalId(journal.id);
-            setJournalTitle(journal.title || "");
-            setJournalContent(journal.content || "");
-        } catch (error) {
-            console.error(error);
+        const result = await ApiService.journal.get<Journal>(id);
+        if (!result.ok) {
+            console.error(result.error);
+            return;
         }
+        const response = result.value;
+        console.log("journal detail:", response.data);
+        const journal = response.data;
+        setSelectedJournalId(journal.id);
+        setJournalTitle(journal.title || "");
+        setJournalContent(journal.content || "");
     };
 
     const fetchJournals = async () => {
-        try {
-            const response = await ApiService.journal.list<Journal[]>();
-            console.log("journals:", response.data);
-            setJournals(response.data);
-            if (response.data.length > 0 && selectedJournalId === null) {
-                await loadJournal(response.data[0].id);
-            }
-        } catch (error) {
-            console.error("Failed to fetch Journal data", error);
+        const result = await ApiService.journal.list<Journal[]>();
+        if (!result.ok) {
+            console.error(result.error);
+            return;
+        }
+        const response = result.value;
+        console.log("journals:", response.data);
+        setJournals(response.data);
+        if (response.data.length > 0 && selectedJournalId === null) {
+            await loadJournal(response.data[0].id);
         }
     };
 
     const createJournal = async () => {
-        try {
-            const response = await ApiService.journal.create<Journal>({ title: "Untitled Entry", content: "" })
-            setJournals(prev => [response.data, ...prev]);
-            setSelectedJournalId(response.data.id);
-            setJournalTitle(response.data.title);
-            setJournalContent("");
-        } catch (error) {
-            console.error("Failed to create a journal", error);
+        const result = await ApiService.journal.create<Journal>({ title: "Untitled Entry", content: "" })
+        if (!result.ok) {
+            console.error(result.error);
+            return;
         }
+        const response = result.value;
+        setJournals(prev => [response.data, ...prev]);
+        setSelectedJournalId(response.data.id);
+        setJournalTitle(response.data.title);
+        setJournalContent("");
     };
 
     const openJournal = async (journal: Journal) => {

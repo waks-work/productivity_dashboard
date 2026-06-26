@@ -5,7 +5,7 @@ import ApiService from '../../services/ApiService';
 import Whiteboard from './Whiteboard';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Workspace } from './Workspace';
+import { Task, Workspace } from './Workspace';
 import { Journal } from './Journal';
 
 export interface UserProfile {
@@ -27,18 +27,23 @@ export const Dashboard = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const taskResponse = await ApiService.tasks.getAll<any>();
-                setTasks(taskResponse.data);
-
-                const profileResponse = await ApiService.users.getUserProfile<UserProfile>()
-                setUser(profileResponse.data);
-
-            } catch (err) {
-                console.error("Failed to load dashboard data: ", err);
-            } finally {
-                setLoading(false);
+            const result = await ApiService.tasks.getAll<Task>();
+            if (!result.ok) {
+                console.error(result.error);
+                setLoading(true);
+                return;
             }
+            const taskResponse = result.value;
+            setTasks(taskResponse.data);
+
+            const profileResponse = await ApiService.users.getUserProfile<UserProfile>()
+            if (!profileResponse.ok) {
+                console.error(profileResponse.error);
+                setUser(null);
+                return;
+            }
+            setUser(profileResponse.value.data);
+            setLoading(false);
         };
         fetchData();
     }, []);

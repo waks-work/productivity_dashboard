@@ -19,6 +19,7 @@ export const LoginForm = () => {
         const success = await login(email, password);
         if (!success) {
             alert("Invalid credentials. Please try again.");
+            return;
         }
         console.log("Login successful, redirecting...");
         navigate('/dashboard');

@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 enter_root() {
-    cd ~/Documents/PROJECTS/FULLSTACK_APPS/web/productivity/productivity_dashboard/
+    cd ~/Documents/projects/task-master/productivity_dashboard/
 }
 
 activate_virtual_environment() {

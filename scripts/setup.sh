@@ -10,7 +10,8 @@ fi
 # Setup Python virtual environment
 echo "🐍 Setting up Python virtual environment..."
 if [ ! -d "venv" ]; then
-    python -m venv venv
+    #python -m venv venv archlinux 
+    python3 -m venv venv
 fi
 
 source venv/bin/activate

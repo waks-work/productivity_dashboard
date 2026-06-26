@@ -17,6 +17,7 @@ yarn-error.log*
 # Database
 *.sqlite3
 *.db
+productivity_dashboard/backend/db.sqlite3
 
 # IDE
 .vscode/

@@ -15,6 +15,7 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import ApiService from '../../services/ApiService';
 import './Whiteboard.css'
+import { Ok } from '../../services/error';
 
 function ShapeNode({ id, data, selected }: any) {
     const { setNodes } = useReactFlow();
@@ -170,45 +171,43 @@ const WhiteboardContent = () => {
 
     useEffect(() => { fetchBoards(); }, []);
     const fetchBoards = async () => {
-        try {
-            const response = await ApiService.whiteboards.getAll<WhiteboardType[]>();
-            setBoards(response.data);
-            if (response.data.length > 0) {
-                setSelectedBoardId(response.data[0].id || null);
-                setBoardTitle(response.data[0].title);
-                setNodes(response.data[0].nodes || []);
-                setEdges(response.data[0].edges || []);
-            }
-        } catch (error) {
-            console.error('Failed to fetch whiteboards');
+        const result = await ApiService.whiteboards.getAll<WhiteboardType[]>();
+        if (!result.ok) {
+            console.error(result.error);
+            return;
+        }
+        const response = result.value;
+        setBoards(response.data);
+        if (response.data.length > 0) {
+            setSelectedBoardId(response.data[0].id || null);
+            setBoardTitle(response.data[0].title);
+            setNodes(response.data[0].nodes || []);
+            setEdges(response.data[0].edges || []);
         }
     };
 
     const createBoard = async () => {
-        try {
-            const response = await ApiService.whiteboards.create<WhiteboardType>({
-                title: `Board ${boards.length + 1}`,
-                nodes: [], edges: []
-            });
-            const newBoard = response.data;
-            setBoards((prev) => [...prev, newBoard]);
-            setSelectedBoardId(newBoard.id || null);
-            setBoardTitle(newBoard.title);
-            setNodes([]);
-            setEdges([]);
-        } catch (error) {
-            console.error('Failed to create board');
+        const result = await ApiService.whiteboards.create<WhiteboardType>({
+            title: `Board ${boards.length + 1}`,
+            nodes: [], edges: []
+        });
+        if (!result.ok) {
+            console.error(result.error);
+            return;
         }
+        const response = result.value;
+        const newBoard = response.data;
+        setBoards((prev) => [...prev, newBoard]);
+        setSelectedBoardId(newBoard.id || null);
+        setBoardTitle(newBoard.title);
+        setNodes([]);
+        setEdges([]);
     };
 
     const saveBoard = async () => {
-        try {
-            if (!selectedBoardId) return;
-            await ApiService.whiteboards.update(selectedBoardId, { title: boardTitle, nodes, edges });
-            fetchBoards();
-        } catch (error) {
-            console.error('Failed to save board');
-        }
+        if (!selectedBoardId) return;
+        Ok(await ApiService.whiteboards.update(selectedBoardId, { title: boardTitle, nodes, edges }));
+        fetchBoards();
     };
 
     const switchBoard = (board: WhiteboardType) => {

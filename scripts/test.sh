@@ -5,7 +5,8 @@ echo "🧪 Running tests..."
 echo "🐍 Testing backend..."
 source venv/bin/activate
 cd productivity_dashboard/backend
-python manage.py test
+#python manage.py test -> archlinux
+python3 manage.py test
 cd ../..
 
 # Frontend tests

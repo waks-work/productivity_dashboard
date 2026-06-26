@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import ApiService from "../../services/ApiService";
+import { Ok } from "../../services/error";
 
-interface Task {
+export interface Task {
     id?: number;
     title: string;
     description?: string;
@@ -58,25 +59,28 @@ export const Workspace = () => {
 
     useEffect(() => {
         const fetchTasks = async () => {
-            try {
-                const response = await ApiService.tasks.getAll<Task>();
-                setTasks(response.data);
-            } catch (error) {
-                console.error("Failed to fetch tasks");
-            } finally {
-                setLoading(false);
+            const result = await ApiService.tasks.getAll<Task>();
+            if (!result.ok) {
+                console.error(result.error);
+                setLoading(true);
+                return;
             }
+            const response = result.value;
+            setTasks(response.data);
+            setLoading(false)
         };
         fetchTasks();
         const fetchQuickNotes = async () => {
-            try {
-                const response = await ApiService.quick_notes.getAll<any>();
-                if (response.data.length > 0) {
-                    setQuickNote(response.data[0].content);
-                    setQuickNoteId(response.data[0].id);
-                }
-            } catch (error) {
-                console.error("Failed to  fetch quick notes")
+            const result = await ApiService.quick_notes.getAll<any>();
+            if (!result.ok) {
+                console.error(result.error);
+                setLoading(true);
+                return;
+            }
+            const response = result.value;
+            if (response.data.length > 0) {
+                setQuickNote(response.data[0].content);
+                setQuickNoteId(response.data[0].id);
             }
         };
         fetchQuickNotes();
@@ -87,81 +91,87 @@ export const Workspace = () => {
     const doneTasks = tasks.filter(task => task.status === "DONE");
 
     const handleSubmit = async () => {
-        try {
-            const formattedDeadline = taskForm.deadline ? new Date(taskForm.deadline).toISOString() : undefined;
+        const formattedDeadline = taskForm.deadline ? new Date(taskForm.deadline).toISOString() : undefined;
 
-            const response = await ApiService.tasks.create<CreateTask>({
-                title: taskForm.title,
-                description: taskForm.description,
-                priority: taskForm.priority,
-                status: taskForm.status,
-                deadline: formattedDeadline
-            });
-
-            setTasks(prev => [...prev, response.data]);
-            setShowCreateModal(false);
-            setTaskForm({
-                title: '',
-                description: '',
-                priority: 'MEDIUM',
-                status: 'TODO',
-                deadline: ''
-            });
-        } catch (error) {
-            console.error("Failed to create task");
+        const result = await ApiService.tasks.create<CreateTask>({
+            title: taskForm.title,
+            description: taskForm.description,
+            priority: taskForm.priority,
+            status: taskForm.status,
+            deadline: formattedDeadline
+        });
+        if (!result.ok) {
+            console.error(result.error);
+            setLoading(true);
+            return;
         }
+        const response = result.value;
+        setTasks(prev => [...prev, response.data]);
+        setShowCreateModal(false);
+        setTaskForm({
+            title: '',
+            description: '',
+            priority: 'MEDIUM',
+            status: 'TODO',
+            deadline: ''
+        });
     };
 
     const openNotes = async (task: Task) => {
-        try {
-            setSelectedTask(task);
-            setShowNotesModal(true);
-            setLoadingNotes(true);
+        setSelectedTask(task);
+        setShowNotesModal(true);
+        setLoadingNotes(true);
 
-            const response = await ApiService.notes.getTaskNotes<TaskNote>(task.id!);
-            setNotes(response.data);
-        } catch (error) {
-            console.error("Failed to fetch notes");
-        } finally {
-            setLoadingNotes(false);
+        const result = await ApiService.notes.getTaskNotes<TaskNote>(task.id!);
+        if (!result.ok) {
+            console.error(result.error);
+            setLoading(true);
+            return;
         }
+        const response = result.value;
+
+        setNotes(response.data);
+        setLoadingNotes(false);
     };
 
     const handleSaveNote = async () => {
         if (!selectedTask || !note.trim()) return;
-        try {
-            const response = await ApiService.notes.createNote<TaskNote>({ task: selectedTask.id!, content: note });
-            setNotes(prev => [...prev, response.data]);
-            setNote('');
-        } catch (error) {
-            console.error("Failed to save note");
+        const result = await ApiService.notes.createNote<TaskNote>({ task: selectedTask.id!, content: note });
+        if (!result.ok) {
+            console.error(result.error);
+            setLoading(true);
+            return;
         }
+        const response = result.value;
+
+        setNotes(prev => [...prev, response.data]);
+        setNote('');
     };
 
     const handleDrop = async (status: string) => {
         if (!draggedTask) return;
-        try {
-            const updatedTasks = tasks.map(task => task.id === draggedTask.id ? { ...task, status } : task);
-            setTasks(updatedTasks);
-            await ApiService.tasks.update(draggedTask.id?.toString()!, { ...draggedTask, status });
-        } catch (error) {
-            console.error("Failed to update task");
-        }
+        const updatedTasks = tasks.map(task => task.id === draggedTask.id ? { ...task, status } : task);
+
+        setTasks(updatedTasks);
+        Ok(await ApiService.tasks.update(draggedTask.id?.toString()!, { ...draggedTask, status }));
         setDraggedTask(null);
     };
 
     const handleSaveQuickNotes = async () => {
-        try {
-            if (quickNoteId) {
-                await ApiService.quick_notes.update(quickNoteId, { content: quickNote })
-            } else {
-                const response = await ApiService.quick_notes.create<QuickNote>({ content: quickNote });
-                if (response.data.id) {
-                    setQuickNoteId(response.data.id)
-                }
+        if (quickNoteId) {
+            Ok(await ApiService.quick_notes.update(quickNoteId, { content: quickNote }))
+
+        } else {
+            const result = await ApiService.quick_notes.create<QuickNote>({ content: quickNote });
+            if (!result.ok) {
+                console.error(result.error);
+                setLoading(true);
+                return;
             }
-        } catch (error) {
-            console.error("Failed to save quick note");
+            const response = result.value;
+            if (response.data.id) {
+                setQuickNoteId(response.data.id)
+            }
         }
     };
     return (
