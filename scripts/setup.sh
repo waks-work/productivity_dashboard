@@ -1,4 +1,18 @@
 #!/bin/bash
+
+find_python() {
+    if command -v python >/dev/null 2>&1; then
+        echo python
+    elif command -v python3 >/dev/null 2>&1; then
+        echo python3
+    else
+        echo "❌ Python not found."
+        exit 1
+    fi
+}
+
+PYTHON=$(find_python)
+
 echo "🧩 Setting up Productivity Dashboard..."
 
 # Check if we're in the right directory
@@ -10,8 +24,7 @@ fi
 # Setup Python virtual environment
 echo "🐍 Setting up Python virtual environment..."
 if [ ! -d "venv" ]; then
-    #python -m venv venv archlinux 
-    python3 -m venv venv
+    $PYTHON -m venv venv
 fi
 
 source venv/bin/activate
@@ -26,5 +39,4 @@ cd productivity_dashboard/frontend
 npm install
 cd ../..
 
-echo "✅ Productivity Dashboard setup complete!"
-echo "💡 Start development with: ./scripts/dev.sh"
+echo "Servers are up start developement with ./script/dev.sh"
