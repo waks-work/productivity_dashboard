@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Journal.css';
 import ApiService from '../../services/ApiService';
+import { Ok } from '../../services/error';
 
 type Journal = {
     id: number;
@@ -66,18 +67,16 @@ export const Journal = () => {
     };
 
     const handleSaveJournal = async () => {
-        try {
-            if (!selectedJournalId) return;
-            await ApiService.journal.update(
-                selectedJournalId, { title: journalTitle, content: journalContent })
-            setJournals(prev => prev.map(journal => journal.id === selectedJournalId ? {
+        if (!selectedJournalId) return;
+        Ok(await ApiService.journal.update(selectedJournalId, { title: journalTitle, content: journalContent }));
+
+        setJournals(prev => prev.map(journal =>
+            journal.id === selectedJournalId ? {
                 ...journal,
-                title: journalTitle, content: journalContent,
+                title: journalTitle,
+                content: journalContent,
                 updated_at: new Date().toISOString(),
             } : journal));
-        } catch (error) {
-            console.error("Failed to save journal: ", error)
-        }
     };
 
     const selectedJournal = journals.find(journal => journal.id === selectedJournalId);

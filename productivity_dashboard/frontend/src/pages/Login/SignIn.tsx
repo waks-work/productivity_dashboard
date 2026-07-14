@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Login.css"
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from 'react-router-dom';
-import ApiService from "../../services/ApiService";
 
 export const SignInForm = () => {
     const [email, setEmail] = useState("");

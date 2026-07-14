@@ -362,9 +362,7 @@ export const Workspace = () => {
                                             <span>
                                                 {noteItem.created_at ? new Date(noteItem.created_at).toLocaleString() : ""}
                                             </span>
-                                        </div>
-                                    ))) : (
-                                    <p>No notes yet</p>)}
+                                        </div>))) : (<p>No notes yet</p>)}
                             </div>
 
                             <textarea

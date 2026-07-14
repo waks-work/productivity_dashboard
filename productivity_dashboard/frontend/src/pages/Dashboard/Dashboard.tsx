@@ -107,9 +107,7 @@ export const Dashboard = () => {
                             src={user.profile_pic}
                             alt="profile"
                             className='profile-image'
-                        />) : (
-                        getDisplayName(user?.email).charAt(0)
-                    )}
+                        />) : (getDisplayName(user?.email).charAt(0))}
                     </div>
 
                     {activeProfile && (
@@ -121,9 +119,7 @@ export const Dashboard = () => {
                                             src={user.profile_pic}
                                             alt="profile"
                                             className='profile-avatar-image'
-                                        />) : (
-                                        getDisplayName(user?.email).charAt(0)
-                                    )}
+                                        />) : (getDisplayName(user?.email).charAt(0))}
                                 </div>
 
                                 <div>
