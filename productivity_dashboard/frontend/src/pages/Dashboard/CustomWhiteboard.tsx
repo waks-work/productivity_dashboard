@@ -1,3 +1,4 @@
+import "./CustomWhiteboard.css"
 import {
     createContext,
     memo,
@@ -147,473 +148,18 @@ export const useWhiteboard = () => {
     return ctx;
 };
 
+/* 
+ * we can use it like this without the need of each and every time calling Whiteboard 
+ * provider making the work easier
+ * <Whiteboard>
+ * ... our work and implementations happen in here
+ * </Whiteboard>
+ * @NOTE(wakswork): for this we need a data transfer test to check if the data is 
+ * being transfered downwards to all the children components 
+ * */
 export const Whiteboard = ({ children }: { children: React.ReactNode }) => (
     <WhiteboardProvider>{children}</WhiteboardProvider>
 );
-
-const CSS = `
-  .wb-root {
-    --bg: #0d0d14;
-    --surface: #13131f;
-    --surface2: #1a1a28;
-    --border: rgba(255,255,255,0.08);
-    --border-strong: rgba(255,255,255,0.16);
-    --accent: #7c6ef7;
-    --accent-soft: rgba(124,110,247,0.18);
-    --accent2: #5ec4ff;
-    --text: #e2e4f0;
-    --text-muted: #6b7099;
-    --handle: #7c6ef7;
-    --handle-hover: #a89ff7;
-    --selected: #a89ff7;
-    --edge: #4a4870;
-    --edge-hover: #7c6ef7;
-    --green: #3ddc84;
-    --red: #f2736a;
-    --amber: #f0b429;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-  .wb-root *, .wb-root *::before, .wb-root *::after {
-    box-sizing: border-box;
-  }
-  .wb-root {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background: var(--bg);
-    overflow: hidden;
-    user-select: none;
-  }
-  /* Dot grid */
-  .wb-root::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ── Toolbar ── */
-  .wb-toolbar {
-    position: absolute;
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 14px;
-    padding: 6px 10px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.04) inset;
-    backdrop-filter: blur(16px);
-  }
-  .wb-sep {
-    width: 1px;
-    height: 22px;
-    background: var(--border-strong);
-    margin: 0 4px;
-    flex-shrink: 0;
-  }
-  .wb-tool {
-    position: relative;
-    background: transparent;
-    border: 1px solid transparent;
-    border-radius: 8px;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 5px 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    transition: color 0.15s, background 0.15s, border-color 0.15s;
-    white-space: nowrap;
-  }
-  .wb-tool:hover {
-    color: var(--text);
-    background: var(--surface2);
-    border-color: var(--border-strong);
-  }
-  .wb-tool.active {
-    color: #c4bfff;
-    background: var(--accent-soft);
-    border-color: rgba(124,110,247,0.4);
-  }
-  .wb-tool svg {
-    flex-shrink: 0;
-  }
-
-  /* Tooltip */
-  .wb-tool::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface2);
-    border: 1px solid var(--border-strong);
-    color: var(--text);
-    font-size: 11px;
-    padding: 3px 7px;
-    border-radius: 5px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-  .wb-tool:hover::after {
-    opacity: 1;
-  }
-
-  /* ── Canvas ── */
-  .wb-canvas {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    cursor: default;
-  }
-  .wb-canvas.tool-pan { cursor: grab; }
-  .wb-canvas.tool-pan:active { cursor: grabbing; }
-  .wb-canvas.tool-connect { cursor: crosshair; }
-  .wb-canvas.tool-shape { cursor: cell; }
-
-  .wb-world {
-    position: absolute;
-    inset: 0;
-    transform-origin: 0 0;
-    will-change: transform;
-  }
-
-  /* ── Nodes ── */
-  .wb-node {
-    position: absolute;
-    cursor: grab;
-    will-change: transform;
-    transition: filter 0.1s;
-  }
-  .wb-node:active { cursor: grabbing; }
-  .wb-node.is-dragging { filter: drop-shadow(0 8px 24px rgba(124,110,247,0.35)); }
-
-  .wb-node-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Shared shape wrapper */
-  .wb-shape {
-    position: absolute;
-    inset: 0;
-    overflow: visible;
-  }
-
-  .wb-node-body {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-  }
-  .wb-label {
-    background: transparent;
-    border: none;
-    outline: none;
-    resize: none;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    width: 80%;
-    line-height: 1.45;
-    cursor: inherit;
-    pointer-events: none;
-    overflow: hidden;
-    word-break: break-word;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
-    font-family: inherit;
-  }
-  .wb-node.selected .wb-label {
-    pointer-events: all;
-    cursor: text;
-  }
-
-  /* ── Handles ── */
-  .wb-handle {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--handle);
-    border: 2px solid var(--bg);
-    border-radius: 50%;
-    z-index: 20;
-    cursor: crosshair;
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
-    transition: opacity 0.15s, transform 0.15s, background 0.15s;
-    pointer-events: all;
-  }
-  .wb-node:hover .wb-handle,
-  .wb-node.selected .wb-handle {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  .wb-handle:hover {
-    background: var(--handle-hover);
-    transform: translate(-50%, -50%) scale(1.3) !important;
-  }
-  .wb-handle.pos-left   { left: 0%;  top: 50%; }
-  .wb-handle.pos-right  { left: 100%; top: 50%; }
-  .wb-handle.pos-top    { left: 50%; top: 0%; }
-  .wb-handle.pos-bottom { left: 50%; top: 100%; }
-
-  /* ── Resize handle ── */
-  .wb-resize {
-    position: absolute;
-    bottom: -5px;
-    right: -5px;
-    width: 14px;
-    height: 14px;
-    background: var(--surface);
-    border: 2px solid var(--selected);
-    border-radius: 3px;
-    cursor: se-resize;
-    z-index: 30;
-    opacity: 0;
-    transition: opacity 0.15s;
-    pointer-events: all;
-  }
-  .wb-node.selected .wb-resize { opacity: 1; }
-
-  /* ── Selection box ── */
-  .wb-selection-rect {
-    position: absolute;
-    background: rgba(124,110,247,0.07);
-    border: 1px solid rgba(124,110,247,0.45);
-    border-radius: 3px;
-    pointer-events: none;
-    z-index: 90;
-  }
-
-  /* ── Edge labels ── */
-  .wb-edge-label-wrap {
-    position: absolute;
-    z-index: 50;
-    pointer-events: all;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-  }
-  .wb-edge-label {
-    background: var(--surface2);
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 2px 7px;
-    white-space: nowrap;
-    max-width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    pointer-events: all;
-    cursor: pointer;
-    transition: color 0.15s, background 0.15s;
-    user-select: none;
-  }
-  .wb-edge-label:hover {
-    color: var(--text);
-    background: var(--surface);
-  }
-
-  /* ── Connect preview ── */
-  .wb-connect-preview {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 95;
-    overflow: visible;
-  }
-
-  /* ── Minimap ── */
-  .wb-minimap {
-    position: absolute;
-    bottom: 14px;
-    right: 14px;
-    width: 160px;
-    height: 110px;
-    background: rgba(13,13,20,0.88);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    z-index: 100;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-  }
-  .wb-minimap canvas { display: block; }
-
-  /* ── Controls ── */
-  .wb-controls {
-    position: absolute;
-    bottom: 14px;
-    left: 14px;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .wb-ctrl-btn {
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    color: var(--text-muted);
-    cursor: pointer;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .wb-ctrl-btn:hover { color: var(--text); background: var(--surface2); }
-
-  /* ── Zoom badge ── */
-  .wb-zoom-badge {
-    position: absolute;
-    bottom: 14px;
-    left: 58px;
-    z-index: 100;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0 8px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.02em;
-  }
-
-  /* ── Context menu ── */
-  .wb-ctx {
-    position: fixed;
-    z-index: 9999;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    padding: 4px;
-    min-width: 160px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    backdrop-filter: blur(12px);
-  }
-  .wb-ctx-item {
-    padding: 7px 12px;
-    font-size: 13px;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: color 0.1s, background 0.1s;
-    white-space: nowrap;
-  }
-  .wb-ctx-item:hover { color: var(--text); background: var(--surface2); }
-  .wb-ctx-item.danger:hover { color: var(--red); background: rgba(242,115,106,0.1); }
-  .wb-ctx-sep { height: 1px; background: var(--border); margin: 3px 0; }
-
-  /* ── Edge description edit ── */
-  .wb-edge-desc-popup {
-    position: fixed;
-    z-index: 9999;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    min-width: 220px;
-  }
-  .wb-edge-desc-popup input {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    color: var(--text);
-    font-size: 13px;
-    padding: 6px 10px;
-    outline: none;
-    font-family: inherit;
-  }
-  .wb-edge-desc-popup input:focus { border-color: var(--accent); }
-  .wb-edge-desc-actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-    justify-content: flex-end;
-  }
-  .wb-btn {
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    color: var(--text-muted);
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: all 0.1s;
-    font-family: inherit;
-  }
-  .wb-btn:hover { color: var(--text); background: var(--surface2); }
-  .wb-btn.primary {
-    background: var(--accent-soft);
-    border-color: rgba(124,110,247,0.4);
-    color: #c4bfff;
-  }
-  .wb-btn.primary:hover { background: rgba(124,110,247,0.28); }
-
-  /* ── Node color swatches (ctx) ── */
-  .wb-color-row {
-    display: flex;
-    gap: 5px;
-    padding: 6px 10px;
-  }
-  .wb-swatch {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.12s, border-color 0.12s;
-  }
-  .wb-swatch:hover { transform: scale(1.25); border-color: rgba(255,255,255,0.3); }
-
-  /* ── Hint strip ── */
-  .wb-hints {
-    position: absolute;
-    bottom: 54px;
-    left: 14px;
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .wb-hint {
-    font-size: 10px;
-    color: var(--text-muted);
-    opacity: 0.6;
-    letter-spacing: 0.02em;
-  }
-`;
 
 /*
  * SVG && ICON ENGINE: 
@@ -628,6 +174,7 @@ const Icon = ({ d, size = 16 }: { d: string; size?: number }) => (
     </svg>
 );
 
+/* This are the different svg icons implementation for different shapes */
 const Icons = {
     cursor: 'M4 4l7.5 16 3-7 7-3z',
     square: 'M3 3h18v18H3z',
@@ -665,6 +212,7 @@ const NODE_COLORS: Record<string, { fill: string; stroke: string; text: string }
 /* Extracts the available keys into an array of strings SWATCHES['purple', 'teal',...] */
 const SWATCHES = Object.keys(NODE_COLORS);
 
+/* Get the color of the node to be used from the theme */
 function getNodeColor(colorKey?: string) {
     return NODE_COLORS[colorKey || 'neutral'] ?? NODE_COLORS.neutral;
 }
@@ -680,51 +228,51 @@ interface ShapeSVGProps {
 
 /* Allows us to make distict SVG geometries */
 const ShapeSVG = memo(({ shape, width, height, fill, stroke, strokeWidth = 1.5 }: ShapeSVGProps) => {
-    const w = width;
-    const h = height;
-    const sw = strokeWidth;
-    const p = sw / 2 + 1; //padding
+    const svgWidth = width;
+    const svgHeight = height;
+    const svgStrokeWidth = strokeWidth;
+    const padding = svgStrokeWidth / 2 + 1;
 
-    const commonProps = { fill, stroke, strokeWidth: sw };
+    const commonProps = { fill, stroke, strokeWidth: svgStrokeWidth };
 
     switch (shape) {
         case 'circle':
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx={w / 2} cy={h / 2} rx={w / 2 - p} ry={h / 2 - p} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx={svgWidth / 2} cy={svgHeight / 2} rx={svgWidth / 2 - padding} ry={svgHeight / 2 - padding} {...commonProps} />
                 </svg>
             );
         case 'triangle':
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <polygon points={`${w / 2},${p} ${w - p},${h - p} ${p},${h - p}`} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <polygon points={`${svgWidth / 2},${padding} ${svgWidth - padding},${svgHeight - padding} ${padding},${svgHeight - padding}`} {...commonProps} />
                 </svg>
             );
         case 'diamond':
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <polygon points={`${w / 2},${p} ${w - p},${h / 2} ${w / 2},${h - p} ${p},${h / 2}`} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <polygon points={`${svgWidth / 2},${padding} ${svgWidth - padding},${svgHeight / 2} ${svgWidth / 2},${svgHeight - padding} ${padding},${svgHeight / 2}`} {...commonProps} />
                 </svg>
             );
         case 'hexagon': {
-            const cx = w / 2, cy = h / 2;
-            const rx = w / 2 - p, ry = h / 2 - p;
+            const cx = svgWidth / 2, cy = svgHeight / 2;
+            const rx = svgWidth / 2 - padding, ry = svgHeight / 2 - padding;
             const pts = Array.from({ length: 6 }, (_, i) => {
                 const a = (Math.PI / 180) * (60 * i - 30);
                 return `${cx + rx * Math.cos(a)},${cy + ry * Math.sin(a)}`;
             }).join(' ');
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
                     <polygon points={pts} {...commonProps} />
                 </svg>
             );
         }
         case 'parallelogram': {
-            const skew = Math.min(30, w * 0.18);
+            const skew = Math.min(30, svgWidth * 0.18);
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
                     <polygon
-                        points={`${skew + p},${p} ${w - p},${p} ${w - skew - p},${h - p} ${p},${h - p}`}
+                        points={`${skew + padding},${padding} ${svgWidth - padding},${padding} ${svgWidth - skew - padding},${svgHeight - padding} ${padding},${svgHeight - padding}`}
                         {...commonProps}
                     />
                 </svg>
@@ -732,36 +280,36 @@ const ShapeSVG = memo(({ shape, width, height, fill, stroke, strokeWidth = 1.5 }
         }
         case 'rounded':
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <rect x={p} y={p} width={w - p * 2} height={h - p * 2} rx={16} ry={16} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <rect x={padding} y={padding} width={svgWidth - padding * 2} height={svgHeight - padding * 2} rx={16} ry={16} {...commonProps} />
                 </svg>
             );
         case 'stadium': {
-            const r = (h - p * 2) / 2;
+            const r = (svgHeight - padding * 2) / 2;
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <rect x={p} y={p} width={w - p * 2} height={h - p * 2} rx={r} ry={r} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <rect x={padding} y={padding} width={svgWidth - padding * 2} height={svgHeight - padding * 2} rx={r} ry={r} {...commonProps} />
                 </svg>
             );
         }
         case 'cylinder': {
-            const rx2 = w / 2 - p;
-            const ry2 = Math.max(8, h * 0.12);
+            const rx2 = svgWidth / 2 - padding;
+            const ry2 = Math.max(8, svgHeight * 0.12);
             const bodyTop = ry2;
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <rect x={p} y={bodyTop} width={w - p * 2} height={h - bodyTop - p} fill={fill} stroke={stroke} strokeWidth={sw} />
-                    <ellipse cx={w / 2} cy={bodyTop} rx={rx2} ry={ry2} fill={fill} stroke={stroke} strokeWidth={sw} />
-                    <ellipse cx={w / 2} cy={h - p - ry2 * 0.5} rx={rx2} ry={ry2} fill="none" stroke={stroke} strokeWidth={sw} strokeDasharray="3 2" />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <rect x={padding} y={bodyTop} width={svgWidth - padding * 2} height={svgHeight - bodyTop - padding} fill={fill} stroke={stroke} strokeWidth={svgStrokeWidth} />
+                    <ellipse cx={svgWidth / 2} cy={bodyTop} rx={rx2} ry={ry2} fill={fill} stroke={stroke} strokeWidth={svgStrokeWidth} />
+                    <ellipse cx={svgWidth / 2} cy={svgHeight - padding - ry2 * 0.5} rx={rx2} ry={ry2} fill="none" stroke={stroke} strokeWidth={svgStrokeWidth} strokeDasharray="3 2" />
                 </svg>
             );
         }
         case 'document': {
-            const wave = h * 0.12;
+            const wave = svgHeight * 0.12;
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
                     <path
-                        d={`M ${p} ${p} H ${w - p} V ${h - wave - p} Q ${w * 0.75} ${h - p} ${w / 2} ${h - wave - p * 0.5} Q ${w * 0.25} ${h - wave * 1.8 - p} ${p} ${h - wave - p} Z`}
+                        d={`M ${padding} ${padding} H ${svgWidth - padding} V ${svgHeight - wave - padding} Q ${svgWidth * 0.75} ${svgHeight - padding} ${svgWidth / 2} ${svgHeight - wave - padding * 0.5} Q ${svgWidth * 0.25} ${svgHeight - wave * 1.8 - padding} ${padding} ${svgHeight - wave - padding} Z`}
                         {...commonProps}
                     />
                 </svg>
@@ -769,8 +317,8 @@ const ShapeSVG = memo(({ shape, width, height, fill, stroke, strokeWidth = 1.5 }
         }
         default: // rectangle
             return (
-                <svg className="wb-shape" viewBox={`0 0 ${w} ${h}`} xmlns="http://www.w3.org/2000/svg">
-                    <rect x={p} y={p} width={w - p * 2} height={h - p * 2} rx={4} ry={4} {...commonProps} />
+                <svg className="wb-shape" viewBox={`0 0 ${svgWidth} ${svgHeight}`} xmlns="http://www.w3.org/2000/svg">
+                    <rect x={padding} y={padding} width={svgWidth - padding * 2} height={svgHeight - padding * 2} rx={4} ry={4} {...commonProps} />
                 </svg>
             );
     }
@@ -778,9 +326,7 @@ const ShapeSVG = memo(({ shape, width, height, fill, stroke, strokeWidth = 1.5 }
 
 ShapeSVG.displayName = 'ShapeSVG';
 
-// ─────────────────────────────────────────────────────────────
-// 6. Handle & NodeResizer
-// ─────────────────────────────────────────────────────────────
+// Handle & NodeResizer
 
 export const Handle = ({ type: _type, position }: { type?: 'source' | 'target'; position: Position }) => {
     const posMap: Record<Position, string> = {
@@ -925,10 +471,7 @@ export const nodeTypes: Record<string, React.ComponentType<BoardNode>> = {
     shapeNode: ShapeNode,
 };
 
-// ─────────────────────────────────────────────────────────────
-// 8. Edge geometry (support multiple edges between same pair)
-// ─────────────────────────────────────────────────────────────
-
+// Edge geometry (support multiple edges between same pair)
 function getNodeRect(node: BoardNode) {
     return {
         x: node.position.x,
@@ -1880,7 +1423,6 @@ const InnerBoard = () => {
 
 export const CustomWhiteboard = () => (
     <>
-        <StyleTag />
         <Whiteboard>
             <div className="wb-root">
                 <InnerBoard />

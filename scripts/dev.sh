@@ -1,4 +1,18 @@
 #!/bin/bash
+
+find_python() {
+    if command -v python >/dev/null 2>&1; then
+        echo python
+    elif command -v python3 >/dev/null 2>&1; then
+        echo python3
+    else
+        echo "❌ Python not found."
+        exit 1
+    fi
+}
+
+PYTHON=$(find_python)
+
 echo "🔧 Starting Productivity Dashboard development..."
 
 # Activate virtual environment
@@ -7,7 +21,7 @@ source venv/bin/activate
 # Start backend in background
 echo "🐍 Starting Django backend..."
 cd productivity_dashboard/backend
-python3 manage.py runserver &
+$PYTHON manage.py runserver &
 BACKEND_PID=$!
 cd ../..
 
