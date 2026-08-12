@@ -7,6 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Task, Workspace } from './Workspace';
 import { Journal } from './Journal';
+import CustomWhiteboard from './CustomWhiteboard';
 
 export interface UserProfile {
     id?: string;
@@ -200,7 +201,8 @@ export const Dashboard = () => {
                 )}
                 {activeView === "Whiteboard" && (
                     <section className="whiteboard-area">
-                        <Whiteboard />
+                        <CustomWhiteboard />
+                        {/*<Whiteboard />*/}
                     </section>
                 )}
 

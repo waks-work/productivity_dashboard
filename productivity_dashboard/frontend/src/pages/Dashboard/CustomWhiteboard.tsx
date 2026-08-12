@@ -1349,18 +1349,18 @@ const Hints = () => (
 // 14. Style injection
 // ─────────────────────────────────────────────────────────────
 
-const StyleTag = () => {
-    useEffect(() => {
-        const id = 'wb-styles';
-        if (document.getElementById(id)) return;
-        const tag = document.createElement('style');
-        tag.id = id;
-        tag.textContent = CSS;
-        document.head.appendChild(tag);
-        return () => { document.getElementById(id)?.remove(); };
-    }, []);
-    return null;
-};
+// const StyleTag = () => {
+//     useEffect(() => {
+//         const id = 'wb-styles';
+//         if (document.getElementById(id)) return;
+//         const tag = document.createElement('style');
+//         tag.id = id;
+//         tag.textContent = CSS;
+//         document.head.appendChild(tag);
+//         return () => { document.getElementById(id)?.remove(); };
+//     }, []);
+//     return null;
+// };
 
 // ─────────────────────────────────────────────────────────────
 // 15. CustomWhiteboard — the top-level component
